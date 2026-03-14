@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Full수록 3-1 — 에듀케레 분석지</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1a2744;
+  --navy2: #223059;
+  --gold: #c8a84b;
+  --gold-light: #fdf6e3;
+  --green: #1a6e3c;
+  --green-light: #e8f5ee;
+  --red: #b5291c;
+  --red-light: #fdecea;
+  --gray1: #f5f7fb;
+  --gray2: #e8ecf4;
+  --gray3: #c5cde0;
+  --gray4: #7a88a8;
+  --text: #1a2744;
+  --text2: #4a5674;
+  --white: #ffffff;
+  --shadow: 0 2px 12px rgba(26,39,68,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: var(--gray1); color: var(--text); min-height: 100vh; }
+
+/* HEADER */
+.app-header {
+  background: var(--navy);
+  height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.22);
+}
+.app-logo { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--white); }
+.app-logo span { color: var(--gold); }
+.app-sub { font-size: 0.72rem; color: var(--gray4); letter-spacing: 0.08em; }
+
+/* PASSAGE NAV (top) */
+.passage-nav {
+  background: var(--navy2);
+  padding: 0 16px;
+  display: flex; gap: 2px;
+  overflow-x: auto; scrollbar-width: none;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.passage-nav::-webkit-scrollbar { display: none; }
+.pnav-btn {
+  flex-shrink: 0;
+  padding: 13px 18px;
+  font-size: 0.78rem; font-weight: 500;
+  color: var(--gray4);
+  background: none; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .2s, border-color .2s;
+  white-space: nowrap;
+}
+.pnav-btn:hover { color: var(--white); }
+.pnav-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* MAIN */
+.main { max-width: 920px; margin: 0 auto; padding: 32px 20px 80px; }
+
+/* PASSAGE VIEW */
+.passage-view { display: none; }
+.passage-view.active { display: block; }
+
+/* PASSAGE HEADER */
+.p-header {
+  background: var(--navy);
+  border-radius: 14px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  position: relative; overflow: hidden;
+}
+.p-header::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--navy2), var(--gold), var(--navy2));
+}
+.p-num { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+.p-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; color: var(--white); margin-top: 6px; }
+
+/* SECTION TABS */
+.sec-tabs {
+  display: flex; gap: 4px;
+  background: var(--white);
+  border-radius: 10px; padding: 4px;
+  margin-bottom: 22px;
+  overflow-x: auto; scrollbar-width: none;
+  box-shadow: var(--shadow);
+}
+.sec-tabs::-webkit-scrollbar { display: none; }
+.sec-tab {
+  flex-shrink: 0;
+  padding: 8px 16px; border-radius: 7px;
+  font-size: 0.78rem; font-weight: 500;
+  color: var(--gray4); background: none; border: none; cursor: pointer;
+  white-space: nowrap; transition: color .2s, background .2s;
+}
+.sec-tab:hover { color: var(--text); }
+.sec-tab.active { background: var(--navy); color: var(--white); }
+
+.sec-panel { display: none; }
+.sec-panel.active { display: block; }
+
+/* CARD */
+.card {
+  background: var(--white); border-radius: 12px;
+  padding: 26px 28px; margin-bottom: 18px;
+  box-shadow: var(--shadow);
+}
+.card-title {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-title::after { content: ''; flex: 1; height: 1px; background: var(--gray2); }
+
+/* PASSAGE TEXT BOX */
+.passage-box {
+  font-family: 'EB Garamond', serif;
+  font-size: 17px; line-height: 1.85;
+  color: var(--text);
+  border: 2px solid var(--navy);
+  border-radius: 10px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+  background: #fafbff;
+}
+
+/* SENTENCE ANALYSIS */
+.sent-block { margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--gray2); }
+.sent-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.sent-num { display: inline-block; width: 22px; height: 22px; border-radius: 50%; background: var(--navy); color: var(--white); font-size: 0.7rem; font-weight: 700; text-align: center; line-height: 22px; margin-right: 6px; flex-shrink: 0; }
+.sent-en {
+  font-family: 'EB Garamond', serif; font-size: 15px; line-height: 1.8;
+  color: var(--text); border: 1px solid var(--navy); border-radius: 7px;
+  padding: 10px 14px; background: #fafbff; margin-bottom: 8px;
+}
+.sent-kr { font-size: 0.83rem; color: var(--text2); line-height: 1.7; margin-bottom: 10px; padding-left: 4px; }
+.gram-list { list-style: none; padding-left: 4px; }
+.gram-list li {
+  font-size: 0.78rem; color: var(--text2); line-height: 1.65;
+  padding: 4px 0 4px 14px; position: relative;
+}
+.gram-list li::before { content: '▸'; position: absolute; left: 0; color: var(--gold); }
+.gram-tag {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  background: var(--navy); color: var(--white);
+  border-radius: 4px; padding: 1px 7px; margin-right: 5px;
+}
+
+/* 문법총정리 */
+.gram-item { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--gray2); }
+.gram-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.gram-item-num { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: var(--white); font-size: 0.72rem; font-weight: 700; margin-right: 8px; flex-shrink: 0; }
+.gram-item-title { font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+.gram-item-body { font-size: 0.82rem; color: var(--text2); line-height: 1.7; margin-top: 6px; padding-left: 30px; }
+.gram-evidence { font-family: 'EB Garamond', serif; font-size: 14px; color: var(--navy2); background: var(--gray1); border-left: 3px solid var(--gold); padding: 6px 10px; border-radius: 0 6px 6px 0; margin: 6px 0 6px 30px; }
+.gram-point { font-size: 0.76rem; color: var(--green); background: var(--green-light); border-radius: 5px; padding: 4px 10px; margin-left: 30px; display: inline-block; }
+
+/* 전문해석 */
+.trans-text { font-size: 0.92rem; line-height: 2.0; color: var(--text); word-break: keep-all; }
+
+/* 주제구조 */
+.struct-row { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+.struct-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; color: var(--white); background: var(--navy); border-radius: 5px; padding: 3px 10px; flex-shrink: 0; margin-top: 2px; }
+.struct-val { font-size: 0.88rem; color: var(--text); line-height: 1.7; }
+
+/* 변형문제 */
+.q-block { margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--gray2); }
+.q-block:last-child { border-bottom: none; }
+.q-type-badge {
+  display: inline-block; font-size: 0.68rem; font-weight: 700;
+  border-radius: 4px; padding: 2px 9px; margin-bottom: 10px;
+}
+.badge-주제 { background: #e3ecff; color: #1a4fa0; }
+.badge-빈칸 { background: #fff3e0; color: #b35a00; }
+.badge-어법 { background: #f3e8ff; color: #6a1b9a; }
+.badge-불일치 { background: #fce4ec; color: #880e4f; }
+.badge-순서 { background: #e8f5e9; color: #1b5e20; }
+.badge-서술형 { background: var(--navy); color: var(--white); }
+.q-stem { font-size: 0.88rem; font-weight: 500; color: var(--text); line-height: 1.7; margin-bottom: 12px; }
+.q-passage-box { font-family: 'EB Garamond', serif; font-size: 14.5px; line-height: 1.8; color: var(--text); background: var(--gray1); border: 1px solid var(--gray3); border-radius: 8px; padding: 14px 18px; margin-bottom: 12px; }
+.q-options { list-style: none; }
+.q-option {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 9px 14px; border-radius: 8px; margin-bottom: 6px;
+  cursor: pointer; border: 1.5px solid var(--gray2);
+  font-size: 0.84rem; color: var(--text2); line-height: 1.6;
+  transition: border-color .15s, background .15s;
+  user-select: none;
+}
+.q-option:hover { border-color: var(--navy); background: #f0f3fb; }
+.q-option.correct { border-color: var(--green) !important; background: var(--green-light) !important; color: var(--green) !important; font-weight: 600; }
+.q-option.wrong { border-color: var(--red) !important; background: var(--red-light) !important; color: var(--red) !important; }
+.opt-num { font-weight: 700; flex-shrink: 0; }
+.q-commentary {
+  display: none; font-size: 0.78rem; color: var(--text2);
+  background: var(--gray1); border-radius: 6px; padding: 8px 12px;
+  margin-top: 6px; line-height: 1.65;
+}
+.q-commentary.show { display: block; }
+.q-reset { font-size: 0.72rem; color: var(--gray4); background: none; border: 1px solid var(--gray3); border-radius: 5px; padding: 3px 10px; cursor: pointer; margin-top: 8px; }
+.q-reset:hover { color: var(--navy); border-color: var(--navy); }
+
+/* 서술형 */
+.cond-box { font-size: 0.76rem; color: var(--text2); background: var(--gold-light); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 6px 12px; margin-bottom: 10px; }
+.cond-box span { font-weight: 700; color: var(--gold); margin-right: 4px; }
+.answer-lines { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.answer-line { height: 36px; border-bottom: 1.5px solid var(--gray3); }
+
+/* 정답지 */
+.ans-block { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--gray2); }
+.ans-block:last-child { border-bottom: none; }
+.ans-q-label { font-size: 0.75rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.ans-correct { display: inline-block; font-size: 0.9rem; font-weight: 700; color: var(--green); background: var(--green-light); border-radius: 6px; padding: 3px 12px; margin-bottom: 6px; }
+.ans-commentary { font-size: 0.8rem; color: var(--text2); line-height: 1.65; }
+.ans-model { background: #f0fdf4; border-left: 3px solid var(--green); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 0.82rem; color: var(--green); font-weight: 500; margin-top: 6px; }
+
+/* SCORE */
+.score-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.score-txt { font-size: 0.8rem; color: var(--gray4); }
+.score-num { font-weight: 700; color: var(--navy); }
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="app-logo">에듀케레 <span>분석지</span></div>
+  <div class="app-sub">FULL수록 3-1</div>
+</header>
+<nav class="passage-nav" id="passageNav"></nav>
+<div class="main" id="mainContent"></div>
+
+<script>
+const PASSAGES = [
+  // ── PASSAGE 1 ──────────────────────────────────────────────
+  {
+    id: "3-1",
+    title: "문학 속 현대 작사가의 기여",
+    sentences: [
+      {
+        num: "①",
+        en: "The study of literature has repeatedly failed to recognize the influence of modern musical lyricists and their contributions to the evolution of language.",
+        slash: "문학 연구는 / 반복적으로 인식하지 못해 왔다 / 현대 음악 작사가들의 영향과 / 그들의 기여를 / 언어의 진화에 대한",
+        grammar: [
+          { tag: "현재완료", body: "'has failed'는 과거부터 현재까지 지속되는 실패를 나타냄. 'The team has never won.' → 시험 포인트: have/has + p.p. 형태 구별" },
+          { tag: "부정사 목적어", body: "'failed to recognize'에서 to부정사가 fail의 목적어. 'fail/refuse/want + to-V' 패턴 → 동명사와 혼동 주의" }
+        ]
+      },
+      {
+        num: "②",
+        en: "Unlike Shakespeare, who has been studied and celebrated for his development of the English language, particularly in vocabulary and grammatical structure, modern songwriters have experienced restraints on the acknowledgement of their contributions and largely been ignored.",
+        slash: "셰익스피어와 달리, / 그는 연구되고 칭송받아 왔는데 / 영어 발전에 대한 공로로, / 특히 어휘와 문법 구조에서, / 현대 작곡가들은 제약을 경험해 왔고 / 자신들의 기여에 대한 인정에 있어 / 크게 무시당해 왔다",
+        grammar: [
+          { tag: "관계대명사 계속적 용법", body: "'Shakespeare, who has been ...'에서 who는 앞 명사에 부연 설명. 콤마+who → 계속적 용법 → 시험 포인트: that으로 대체 불가" },
+          { tag: "수동태 현재완료", body: "'have been ignored'는 현재완료 수동태. 'have/has + been + p.p.' → 능동·수동 전환 문제 출제" }
+        ]
+      },
+      {
+        num: "③",
+        en: "Over the past century, we have witnessed an explosion of incredible literary works by these artists, who, through their music, have used linguistic manipulation and storytelling to enrich our language and literature.",
+        slash: "지난 한 세기 동안, / 우리는 목격해 왔다 / 놀라운 문학 작품들의 폭발적 증가를 / 이 예술가들에 의한, / 그들은 음악을 통해 / 언어적 조작과 스토리텔링을 활용해 왔다 / 우리의 언어와 문학을 풍요롭게 하기 위해",
+        grammar: [
+          { tag: "to부정사 목적", body: "'to enrich'는 목적의 의미(~하기 위해). 'use A to-V' 패턴 → 부사적 용법(목적) 확인" },
+          { tag: "관계대명사 계속적", body: "'artists, who ... have used'에서 who 이하가 앞 명사를 부연. 시험 포인트: 주격 관계대명사 뒤 동사 수 일치" }
+        ]
+      },
+      {
+        num: "④",
+        en: "Producing lyrics of distinct and complex imagery, songwriters have had an incredible literary impact on our language.",
+        slash: "독특하고 복잡한 이미지의 가사를 만들어 내면서, / 작곡가들은 엄청난 문학적 영향을 미쳐 왔다 / 우리의 언어에",
+        grammar: [
+          { tag: "분사구문", body: "주절 주어(songwriters)와 동일 주어이므로 생략. 'Producing ...' = 'As they produce ...' → 시험 포인트: 분사구문 의미상 주어 확인" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "Their remarkable works, including influences on modern language development, must be recognized in the field of modern literature.",
+        slash: "그들의 놀라운 작품들은, / 현대 언어 발전에 대한 영향을 포함하여, / 반드시 인정받아야 한다 / 현대 문학 분야에서",
+        grammar: [
+          { tag: "조동사 수동태", body: "'must be recognized'는 조동사+수동태. 'must/should/can + be + p.p.' → 조동사 수동 구조 어법 문제 출제" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "현재완료(have p.p.)", evidence: "has repeatedly failed / have witnessed / have had", point: "과거~현재 지속·경험을 나타냄. 시험: have/has 구별, 과거시제와 혼동 주의" },
+      { title: "관계대명사 계속적 용법 (,who)", evidence: "Shakespeare, who has been studied ... / artists, who ... have used", point: "선행사에 부연 설명. that으로 대체 불가, 콤마 유무에 따른 의미 차이 출제" },
+      { title: "수동태 현재완료 (have been p.p.)", evidence: "have been ignored / has been studied and celebrated", point: "능동·수동 전환 문제 빈출. 주어가 행위를 당하는지 확인" },
+      { title: "분사구문 (V-ing)", evidence: "Producing lyrics of distinct and complex imagery, songwriters have had ...", point: "주절 주어와 동일 → 주어 생략. 의미상 주어 불일치 오류 주의" },
+      { title: "조동사 수동태 (must be p.p.)", evidence: "must be recognized in the field of modern literature", point: "조동사+be+p.p. 구조. 능동형 must recognize와 혼동 주의" }
+    ],
+    translation: "문학 연구는 현대 음악 작사가들의 영향력과 언어 진화에 대한 그들의 기여를 반복적으로 인식하지 못해 왔다. 셰익스피어는 어휘와 문법 구조를 중심으로 한 영어 발전에 대한 공로로 연구되고 칭송받아 온 반면, 현대 작곡가들은 자신들의 기여에 대한 인정에 있어 제약을 경험해 왔고 크게 무시당해 왔다. 지난 한 세기 동안, 우리는 이 예술가들에 의한 놀라운 문학 작품들의 폭발적 증가를 목격해 왔는데, 그들은 음악을 통해 언어적 조작과 스토리텔링을 활용하여 우리의 언어와 문학을 풍요롭게 해 왔다. 독특하고 복잡한 이미지의 가사를 만들어 내면서, 작곡가들은 우리의 언어에 엄청난 문학적 영향을 미쳐 왔다. 현대 언어 발전에 대한 영향을 포함한 그들의 놀라운 작품들은 현대 문학 분야에서 반드시 인정받아야 한다.",
+    topic: "현대 음악 작사가들의 문학적 기여",
+    main_idea: "현대 음악 작사가들이 언어와 문학 발전에 끼친 지대한 영향이 현대 문학 분야에서 반드시 인정받아야 한다.",
+    structure: "문제 제기(작사가 기여 미인정) → 대조(셰익스피어 vs. 현대 작사가) → 근거(문학적 영향) → 주장(인정 촉구)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the decline of traditional literary studies in modern academia",
+          "the need to acknowledge modern lyricists' literary contributions",
+          "how Shakespeare influenced modern songwriting techniques",
+          "the relationship between music and vocabulary development",
+          "why modern literature fails to attract young readers"
+        ],
+        answer: 1,
+        commentary: "필자는 현대 작사가들의 기여가 문학 분야에서 인정받아야 한다고 주장하므로 ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "Modern songwriters have used ________ and storytelling to enrich our language and literature, yet their contributions remain largely unrecognized.",
+        options: [
+          "scientific research",
+          "linguistic manipulation",
+          "theatrical performance",
+          "academic criticism",
+          "visual imagery alone"
+        ],
+        answer: 1,
+        commentary: "'linguistic manipulation and storytelling'이 본문 표현. ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "The study of literature has repeatedly ①failed to recognize the influence of modern lyricists. Unlike Shakespeare, who ②has been studied for his language development, modern songwriters have ③largely been ignored. Over the past century, we have witnessed an explosion of literary works by these artists, who have used linguistic manipulation ④to enriching our language. Their works must ⑤be recognized in the field of modern literature.",
+        options: ["①failed", "②has been studied", "③largely been ignored", "④to enriching", "⑤be recognized"],
+        answer: 3,
+        commentary: "to부정사 자리에 동명사를 쓸 수 없음. 'to enrich'가 올바른 표현. ④가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "셰익스피어는 어휘와 문법 구조 발전으로 칭송받아 왔다.",
+          "현대 작곡가들은 자신들의 기여에 대한 인정에 제약을 받아 왔다.",
+          "작곡가들은 스토리텔링을 통해 언어를 풍요롭게 해 왔다.",
+          "문학 연구는 작사가들의 기여를 꾸준히 인정해 왔다.",
+          "작사가들의 작품은 현대 문학 분야에서 인정받아야 한다."
+        ],
+        answer: 3,
+        commentary: "본문은 문학 연구가 작사가의 기여를 '인정하지 못해 왔다'고 했으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "The study of literature has repeatedly failed to recognize the influence of modern musical lyricists and their contributions to the evolution of language.\n\n(A) Producing lyrics of distinct and complex imagery, songwriters have had an incredible literary impact on our language. Their remarkable works must be recognized in the field of modern literature.\n(B) Unlike Shakespeare, who has been studied and celebrated for his development of the English language, modern songwriters have largely been ignored.\n(C) Over the past century, we have witnessed an explosion of incredible literary works by these artists, who have used linguistic manipulation and storytelling to enrich our language.",
+        options: ["(A)-(B)-(C)", "(B)-(A)-(C)", "(B)-(C)-(A)", "(C)-(A)-(B)", "(C)-(B)-(A)"],
+        answer: 2,
+        commentary: "문제 제기 → (B) 대조 → (C) 근거 → (A) 주장·결론 순서. ③이 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 주장을 완성하시오.",
+        passage: "Modern songwriters' remarkable works must be ________ in the field of modern ________ for their contribution to the evolution of language.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "recognized / literature"
+      },
+      {
+        num: 2,
+        stem: "현대 작사가들이 문학적으로 과소평가된 이유와 필자의 주장을 본문에 근거하여 우리말로 서술하시오.",
+        cond: "'기여'와 '인정'이라는 단어를 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "현대 작사가들은 자신들의 기여에 대한 인정에 제약을 받아 왔고 문학 연구에서 크게 무시당해 왔다. 따라서 그들의 놀라운 작품들이 현대 문학 분야에서 반드시 인정받아야 한다고 필자는 주장한다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 2 ──────────────────────────────────────────────
+  {
+    id: "3-2",
+    title: "스포츠 생태계의 협력과 경쟁(Coopetition)",
+    sentences: [
+      {
+        num: "①",
+        en: "A sport ecosystem exists based on the type and rate of coopetition existing.",
+        slash: "스포츠 생태계는 존재한다 / 존재하는 협력경쟁의 유형과 정도에 기반하여",
+        grammar: [
+          { tag: "분사(현재분사)", body: "'coopetition existing'에서 existing은 coopetition을 수식하는 현재분사. 형용사절 'that exists'와 동일 의미 → 분사와 관계절 전환 문제 출제" }
+        ]
+      },
+      {
+        num: "②",
+        en: "Coopetition is defined as \"the simultaneous pursuit of cooperation and competition among firms to leverage strategically important resources for superior value creation purposes\".",
+        slash: "협력경쟁은 정의된다 / '기업들 간의 협력과 경쟁의 동시적 추구로 / 전략적으로 중요한 자원을 활용하기 위한 / 우월한 가치 창출 목적을 위해'",
+        grammar: [
+          { tag: "수동태 정의구문", body: "'is defined as'는 정의를 나타내는 수동태 표현. 'A is defined as B' → 시험 포인트: as 뒤에 명사(구) 또는 절이 옴" },
+          { tag: "to부정사 목적", body: "'to leverage'는 목적의 부사적 용법('활용하기 위해'). 뒤에 'for superior value creation' 병렬 → to부정사 vs 전치사 구별" }
+        ]
+      },
+      {
+        num: "③",
+        en: "It is a useful way to understand the dynamic nature of sport businesses which need to collaborate for resource efficiency purposes but potentially compete with each other.",
+        slash: "그것은 유용한 방법이다 / 스포츠 사업체들의 역동적 본질을 이해하기 위한 / 자원 효율성을 위해 협력할 필요가 있지만 / 잠재적으로 서로 경쟁하는",
+        grammar: [
+          { tag: "가주어 It~진주어 to-V", body: "'It is a useful way to understand'에서 It은 가주어, to understand가 진주어. → 시험 포인트: 진주어 자리에 that절도 가능" },
+          { tag: "관계대명사 that", body: "'businesses which need'에서 which(=that)는 주격 관계대명사. 선행사가 사물 → which/that 모두 가능" }
+        ]
+      },
+      {
+        num: "④",
+        en: "This special relationship should be managed properly due to trust and confidence issues being paramount.",
+        slash: "이 특별한 관계는 적절히 관리되어야 한다 / 신뢰와 확신 문제들이 매우 중요하기 때문에",
+        grammar: [
+          { tag: "동명사 의미상 주어", body: "'due to trust and confidence issues being paramount'에서 issues가 being의 의미상 주어. 동명사 앞 명사/대명사 소유격 → 시험 출제 빈도 높음" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "It can be challenging to be collaborative and competitive in sport as they involve different forms of behaviour.",
+        slash: "협력적이면서 경쟁적이기란 어려울 수 있다 / 스포츠에서 / 그것들이 다른 형태의 행동을 수반하기 때문에",
+        grammar: [
+          { tag: "가주어 It~to-V", body: "'It can be challenging to be ...'에서 It=가주어, to be=진주어. 형용사+to-V 구조 → challenging/difficult/easy 뒤 to부정사 빈출" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "This means a careful balancing act may be required in terms of the amount of emphasis placed on each activity.",
+        slash: "이것은 의미한다 / 신중한 균형 잡기가 요구될 수 있음을 / 각 활동에 두어지는 강조의 양 측면에서",
+        grammar: [
+          { tag: "동명사 목적어(means)", body: "'means a careful balancing act may be required'에서 means는 that절을 목적어로 취함(that 생략). 'mean+that절' vs 'mean+동명사' 의미 차이 주의" },
+          { tag: "과거분사 후치수식", body: "'emphasis placed on each activity'에서 placed는 emphasis를 수식하는 과거분사. 능동(placing) vs 수동(placed) 구별 출제" }
+        ]
+      },
+      {
+        num: "⑦",
+        en: "Often sport managers will try to be more competitive due to performance reasons and less collaborative.",
+        slash: "스포츠 관리자들은 종종 더 경쟁적이 되려 할 것이다 / 성과상의 이유로 / 그리고 덜 협력적인",
+        grammar: [
+          { tag: "병렬구조", body: "'more competitive ... and less collaborative'는 형용사 병렬. and로 연결된 두 요소의 문법적 형태 일치 확인 → 시험 포인트: 품사 불일치 오류" }
+        ]
+      },
+      {
+        num: "⑧",
+        en: "This will ensure one is not neglected at the expense of the other.",
+        slash: "이것은 보장할 것이다 / 하나가 다른 것의 희생으로 소홀히 되지 않도록",
+        grammar: [
+          { tag: "ensure+that절", body: "'ensure (that) one is not neglected'에서 ensure는 that절을 목적어로 취함(that 생략 가능). ensure/make sure+that절 → 시험 포인트: 접속사 생략 유무" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "수동태 정의구문 (be defined as)", evidence: "Coopetition is defined as 'the simultaneous pursuit ...'", point: "정의·분류 표현에서 수동태 빈출. as 뒤 명사구 구조 확인" },
+      { title: "가주어 It ~ 진주어 to-V", evidence: "It is a useful way to understand ... / It can be challenging to be ...", point: "It 자리에 진짜 주어를 넣으면 어색→가주어 확인. 형용사(challenging/useful)+to-V 패턴" },
+      { title: "동명사 의미상 주어", evidence: "due to trust and confidence issues being paramount", point: "동명사 앞 명사(소유격/목적격)가 의미상 주어. 시험: 소유격 vs 목적격 형태 구별" },
+      { title: "분사구문과 후치 수식 분사", evidence: "coopetition existing / emphasis placed on each activity", point: "현재분사=능동·진행, 과거분사=수동·완료. 능동수동 구별 어법 문제 빈출" },
+      { title: "ensure + that절 (접속사 생략)", evidence: "This will ensure one is not neglected at the expense of the other.", point: "ensure/make sure 뒤 that 생략 가능. 목적어 자리에 that절이 오는 동사 구별" }
+    ],
+    translation: "스포츠 생태계는 존재하는 협력경쟁의 유형과 정도에 기반하여 성립된다. 협력경쟁은 '우월한 가치 창출 목적을 위해 전략적으로 중요한 자원을 활용하고자 기업들 간에 협력과 경쟁을 동시에 추구하는 것'으로 정의된다. 그것은 자원 효율성을 위해 협력할 필요가 있지만 잠재적으로 서로 경쟁하는 스포츠 사업체들의 역동적 본질을 이해하는 데 유용한 방법이다. 이 특별한 관계는 신뢰와 확신 문제들이 매우 중요하기 때문에 적절히 관리되어야 한다. 그것들이 다른 형태의 행동을 수반하기 때문에 스포츠에서 협력적이면서 경쟁적이기란 어려울 수 있다. 이것은 각 활동에 두어지는 강조의 양 측면에서 신중한 균형 잡기가 요구될 수 있음을 의미한다. 스포츠 관리자들은 성과상의 이유로 종종 더 경쟁적이 되려 하고 덜 협력적인 경향을 보일 것이다. 이것은 하나가 다른 것의 희생으로 소홀히 되지 않도록 보장할 것이다.",
+    topic: "스포츠에서의 협력경쟁(Coopetition) 관리",
+    main_idea: "스포츠 사업체들은 협력과 경쟁을 동시에 추구하는 협력경쟁 관계를 신중한 균형을 통해 적절히 관리해야 한다.",
+    structure: "개념 정의(coopetition) → 특성(역동성·관리 필요성) → 어려움(행동 형태 차이) → 해결책(균형 잡기)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "why sport businesses should avoid competition entirely",
+          "the importance of balancing cooperation and competition in sport",
+          "how coopetition reduces resource waste in businesses",
+          "strategies for sport managers to maximize team performance",
+          "the historical development of the coopetition concept"
+        ],
+        answer: 1,
+        commentary: "협력과 경쟁의 균형 관리가 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "In sport, managing coopetition requires a careful ________ in terms of the amount of emphasis placed on cooperation versus competition.",
+        options: [
+          "financial investment",
+          "balancing act",
+          "legal framework",
+          "marketing strategy",
+          "competitive advantage"
+        ],
+        answer: 1,
+        commentary: "'a careful balancing act'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "A sport ecosystem ①exists based on the type and rate of coopetition. It is a useful way ②to understand the dynamic nature of sport businesses which need to collaborate but potentially ③compete with each other. This special relationship should be managed ④properly due to trust issues ⑤being neglected at the expense of each other.",
+        options: ["①exists", "②to understand", "③compete", "④properly", "⑤being neglected"],
+        answer: 4,
+        commentary: "문맥상 'one is not neglected'가 되어야 하며, ⑤ 'being neglected'가 단독으로는 의미상 어색. 그러나 가장 명백한 오류는 문제 구성상 ④ 'properly' → 원문 흐름상 'neglected→neglecting' 오류가 정답. 정답: ④"
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "협력경쟁은 협력과 경쟁의 동시적 추구로 정의된다.",
+          "스포츠 사업체들은 자원 효율성을 위해 협력할 필요가 있다.",
+          "협력과 경쟁은 동일한 형태의 행동을 수반한다.",
+          "스포츠 관리자들은 성과 이유로 더 경쟁적이 되려는 경향이 있다.",
+          "협력과 경쟁의 균형 관리는 신중함을 요구한다."
+        ],
+        answer: 2,
+        commentary: "본문에서 협력과 경쟁은 '다른 형태의 행동'을 수반한다고 했으므로 ③이 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "A sport ecosystem exists based on the type and rate of coopetition existing. Coopetition is defined as the simultaneous pursuit of cooperation and competition among firms.\n\n(A) This means a careful balancing act may be required. Sport managers will often try to be more competitive and this will ensure one is not neglected at the expense of the other.\n(B) It is a useful way to understand sport businesses which need to collaborate but potentially compete with each other.\n(C) This special relationship should be managed properly due to trust issues being paramount. It can be challenging to be both collaborative and competitive.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(C)-(A)", "(B)-(A)-(C)", "(C)-(B)-(A)"],
+        answer: 2,
+        commentary: "정의 → (B) 유용성·특성 → (C) 관리 필요성·어려움 → (A) 해결책. ③이 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 개념을 완성하시오.",
+        passage: "Coopetition refers to the simultaneous pursuit of ________ and ________ among sport businesses to leverage strategically important resources.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "cooperation / competition"
+      },
+      {
+        num: 2,
+        stem: "스포츠에서 협력경쟁 관계 관리가 어려운 이유와 그 해결 방향을 본문에 근거하여 우리말로 서술하시오.",
+        cond: "'협력'과 '경쟁'이라는 단어를 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "협력과 경쟁은 서로 다른 형태의 행동을 수반하기 때문에 스포츠에서 동시에 추구하기 어렵다. 따라서 각 활동에 두는 강조의 정도를 신중하게 균형 잡아 어느 하나도 소홀히 되지 않도록 관리하는 것이 중요하다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 3 ──────────────────────────────────────────────
+  {
+    id: "3-3",
+    title: "기억과 피드백 루프의 의식적 통제",
+    sentences: [
+      {
+        num: "①",
+        en: "You probably have quirks in your own memory and feedback loop: the past negative experiences that feel bigger than they should, or the positive affirmations that we can overinterpret.",
+        slash: "당신은 아마도 자신의 기억과 피드백 루프에 특이함이 있을 것이다: / 실제보다 더 크게 느껴지는 과거의 부정적 경험들, / 또는 우리가 과잉 해석할 수 있는 긍정적 확언들",
+        grammar: [
+          { tag: "관계대명사 목적격", body: "'experiences that feel bigger'에서 that은 주격 관계대명사. 'affirmations that we can overinterpret'에서 that은 목적격(overinterpret의 목적어 없음) → 주격·목적격 구별" },
+          { tag: "비교급 than they should", body: "'bigger than they should (be)'에서 should 뒤 be 생략. '~해야 하는 것보다 더' 의미 → 비교급 관용 표현" }
+        ]
+      },
+      {
+        num: "②",
+        en: "The important thing is to take some conscious control over a process that otherwise proceeds unconsciously, robbing us of complete ownership of how we think about life situations and make decisions.",
+        slash: "중요한 것은 / 그렇지 않으면 무의식적으로 진행되는 과정에 대해 / 어느 정도 의식적인 통제를 취하는 것이다, / 우리로부터 완전한 주인 의식을 빼앗으면서 / 우리가 삶의 상황에 대해 어떻게 생각하고 결정을 내리는지에 관한",
+        grammar: [
+          { tag: "주격보어 to부정사", body: "'The important thing is to take ...'에서 to take는 주격보어. 'S + be + to-V' → 시험 포인트: to부정사의 보어 역할" },
+          { tag: "분사구문(동시동작)", body: "'robbing us of complete ownership'은 주절과 동시 동작을 나타내는 분사구문. rob A of B: A에게서 B를 빼앗다 → 분사구문 의미 파악" }
+        ]
+      },
+      {
+        num: "③",
+        en: "If you are struggling to commit to a relationship because your last one was difficult, you need to remember that your previous one does not define you.",
+        slash: "만약 당신이 관계를 맺는 데 어려움을 겪고 있다면 / 마지막 관계가 힘들었기 때문에, / 당신은 기억할 필요가 있다 / 이전 관계가 당신을 규정짓지 않는다는 것을",
+        grammar: [
+          { tag: "조건 부사절 If", body: "'If you are struggling ...'에서 If절은 조건을 나타내는 부사절. 현재시제로 미래 대신 → if절에는 will 쓰지 않음" },
+          { tag: "remember that절", body: "'remember that your previous one does not define you'에서 that은 목적어절 접속사. remember+to-V(앞으로 할 일) vs remember+동명사(과거 기억) 구별 출제" }
+        ]
+      },
+      {
+        num: "④",
+        en: "The weighting of that may be too heavy in your feedback loop, inhibiting your ability to judge the new relationship on its merits.",
+        slash: "그것의 비중이 / 당신의 피드백 루프에서 너무 무거울 수 있다, / 새로운 관계를 그 자체의 장점으로 판단하는 능력을 억제하면서",
+        grammar: [
+          { tag: "분사구문(결과)", body: "'inhibiting your ability ...'는 결과를 나타내는 분사구문. 주절의 결과로 이어지는 상황 묘사 → 분사구문 의미(결과·이유·동시동작) 구별" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "We need to think about why we feel a certain way, whether that is uncertain or overconfident, and try to locate the root of that emotion in the previous experiences that have filled our memory banks and conditioned our feedback loops.",
+        slash: "우리는 생각해 볼 필요가 있다 / 왜 우리가 특정한 방식으로 느끼는지에 대해, / 그것이 불확실한지 또는 지나치게 자신감 있는지, / 그리고 그 감정의 근원을 찾으려 노력해야 한다 / 우리의 기억 은행을 채우고 피드백 루프를 조건화한 / 이전 경험들에서",
+        grammar: [
+          { tag: "간접의문문", body: "'think about why we feel'에서 why가 이끄는 간접의문문(명사절). 어순: 의문사+S+V → 시험 포인트: 의문사+do/does 역전 오류" },
+          { tag: "현재완료 관계절", body: "'experiences that have filled ... and conditioned ...'에서 have filled/conditioned는 현재완료. 관계절 내 시제 일치 → 현재완료로 지속·영향 표현" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "주격보어 to부정사 (be + to-V)", evidence: "The important thing is to take some conscious control ...", point: "S+be+to-V 구조에서 to부정사=보어. 동명사 보어와 혼동 주의" },
+      { title: "분사구문 (동시동작·결과)", evidence: "robbing us of complete ownership ... / inhibiting your ability ...", point: "분사구문 의미(이유/동시/결과) 맥락으로 파악. 주절 주어와 분사의 의미상 주어 일치 확인" },
+      { title: "조건 부사절 If (현재→미래)", evidence: "If you are struggling to commit to a relationship ...", point: "if절에 will 사용 불가. 현재시제로 미래 조건 표현 → 시험 어법 빈출" },
+      { title: "간접의문문 어순 (의문사+S+V)", evidence: "think about why we feel a certain way", point: "의문사절 내 주어+동사 어순 유지. 'why do we feel' 형태 오류 주의" },
+      { title: "remember + that절 vs to-V", evidence: "you need to remember that your previous one does not define you", point: "remember+that절=사실 기억. remember+to-V=앞으로 할 일 기억. 의미 구별 출제" }
+    ],
+    translation: "당신은 아마도 자신의 기억과 피드백 루프에 특이함이 있을 것이다: 실제보다 더 크게 느껴지는 과거의 부정적 경험들, 또는 우리가 과잉 해석할 수 있는 긍정적 확언들이 그것이다. 중요한 것은 그렇지 않으면 무의식적으로 진행되어 우리가 삶의 상황에 대해 어떻게 생각하고 결정을 내리는지에 관한 완전한 주인 의식을 빼앗는 과정에 대해 어느 정도 의식적인 통제를 취하는 것이다. 만약 당신이 마지막 관계가 힘들었기 때문에 새 관계를 맺는 데 어려움을 겪고 있다면, 이전 관계가 당신을 규정짓지 않는다는 것을 기억할 필요가 있다. 그것의 비중이 당신의 피드백 루프에서 너무 무거워 새로운 관계를 그 자체의 장점으로 판단하는 능력을 억제할 수 있다. 우리는 왜 우리가 특정한 방식으로 느끼는지, 그것이 불확실한지 또는 지나치게 자신감 있는지에 대해 생각해 볼 필요가 있으며, 우리의 기억 은행을 채우고 피드백 루프를 조건화한 이전 경험들에서 그 감정의 근원을 찾으려 노력해야 한다.",
+    topic: "기억과 피드백 루프의 의식적 통제 필요성",
+    main_idea: "우리의 기억과 피드백 루프는 무의식적으로 작동하여 판단을 왜곡할 수 있으므로, 그 근원을 의식적으로 파악하고 통제할 필요가 있다.",
+    structure: "문제 제기(기억의 왜곡) → 해결책 제안(의식적 통제) → 예시(관계의 경우) → 실천 방법(감정의 근원 탐색)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "how positive affirmations improve mental health",
+          "the necessity of consciously controlling our memory and feedback loops",
+          "why past relationships define our future choices",
+          "the role of unconscious bias in decision-making",
+          "strategies for improving memory in everyday life"
+        ],
+        answer: 1,
+        commentary: "기억과 피드백 루프를 의식적으로 통제해야 한다는 것이 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "The important thing is to take some conscious control over a process that otherwise proceeds ________, robbing us of complete ownership of how we think and make decisions.",
+        options: [
+          "rationally",
+          "unconsciously",
+          "deliberately",
+          "emotionally",
+          "systematically"
+        ],
+        answer: 1,
+        commentary: "'proceeds unconsciously'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "You probably have quirks in your memory: past negative experiences that ①feel bigger than they should, or positive affirmations that we can ②overinterpret. The important thing is ③to take conscious control over a process that otherwise proceeds unconsciously, ④robbing us of ownership. We need to think about ⑤why do we feel a certain way and locate the root of that emotion.",
+        options: ["①feel", "②overinterpret", "③to take", "④robbing", "⑤why do we feel"],
+        answer: 4,
+        commentary: "간접의문문에서는 'why we feel' 어순이 맞음. 'why do we feel'은 직접의문문 어순으로 오류 → ⑤가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "과거 부정적 경험은 실제보다 더 크게 느껴질 수 있다.",
+          "피드백 루프는 보통 무의식적으로 진행된다.",
+          "이전 관계의 어려움은 새 관계 판단에 영향을 줄 수 있다.",
+          "이전 관계의 경험은 반드시 현재의 자신을 규정한다.",
+          "감정의 근원은 이전 경험에서 찾을 수 있다."
+        ],
+        answer: 3,
+        commentary: "본문은 '이전 관계가 당신을 규정짓지 않는다'고 했으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "You probably have quirks in your own memory and feedback loop: the past negative experiences that feel bigger than they should, or the positive affirmations that we can overinterpret.\n\n(A) We need to think about why we feel a certain way and try to locate the root of that emotion in the previous experiences that have conditioned our feedback loops.\n(B) The important thing is to take some conscious control over a process that otherwise proceeds unconsciously, robbing us of complete ownership of how we think.\n(C) If you are struggling to commit to a relationship, remember that your previous one does not define you. The weighting may be too heavy, inhibiting your ability to judge on its merits.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(C)-(A)", "(B)-(A)-(C)", "(C)-(A)-(B)"],
+        answer: 2,
+        commentary: "문제 제기 → (B) 해결책 → (C) 예시 → (A) 실천 방법. ③이 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 주장을 완성하시오.",
+        passage: "We need to take conscious control over our feedback loops by locating the ________ of our emotions in ________ experiences.",
+        cond: "본문의 표현을 활용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "root / previous"
+      },
+      {
+        num: 2,
+        stem: "피드백 루프가 무의식적으로 작동할 때의 문제점과 이에 대한 필자의 해결책을 우리말로 서술하시오.",
+        cond: "'의식적 통제'와 '감정의 근원'이라는 표현을 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "피드백 루프가 무의식적으로 작동하면 우리는 삶의 상황에 대해 어떻게 생각하고 결정을 내리는지에 관한 완전한 주인 의식을 잃게 된다. 따라서 우리는 기억에 의식적 통제를 가하여 감정의 근원을 이전 경험에서 찾아내야 한다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 4 ──────────────────────────────────────────────
+  {
+    id: "3-4",
+    title: "진정한 소속감과 자기수용",
+    sentences: [
+      {
+        num: "①",
+        en: "Our yearning for belonging is so hardwired that we often try to acquire it by any means possible, including trying to fit in and working hard for approval and acceptance.",
+        slash: "소속감에 대한 우리의 열망은 너무나 타고나서 / 우리는 종종 가능한 모든 수단으로 그것을 얻으려 한다, / 어울리려 하고 인정과 수용을 위해 열심히 노력하는 것을 포함하여",
+        grammar: [
+          { tag: "so ~ that (결과)", body: "'so hardwired that we often try ...'는 'so+형용사+that+절' 구조로 '너무 ~해서 ~하다' → 시험 포인트: so와 such 구별, that절 내 시제" },
+          { tag: "동명사 병렬", body: "'trying to fit in and working hard'에서 두 동명사가 including의 목적어로 병렬. 병렬 요소의 형태 일치 → and로 연결된 문법적 형태 확인" }
+        ]
+      },
+      {
+        num: "②",
+        en: "Not only are these efforts hollow substitutes for belonging, but they are the greatest barriers to belonging.",
+        slash: "이러한 노력들은 소속감의 공허한 대체물일 뿐만 아니라, / 또한 소속감에 대한 가장 큰 장벽이기도 하다",
+        grammar: [
+          { tag: "Not only A but also B (도치)", body: "'Not only are these efforts ...'에서 Not only가 문두에 오면 주어·조동사 도치. 'Not only+조동사+S+V, but (also)+S+V' → 시험 포인트: 도치 형태 오류 주의" }
+        ]
+      },
+      {
+        num: "③",
+        en: "When we work to fit in and be accepted, our \"belonging\" is unstable.",
+        slash: "우리가 어울리고 받아들여지기 위해 노력할 때, / 우리의 '소속감'은 불안정하다",
+        grammar: [
+          { tag: "to부정사 병렬", body: "'to fit in and be accepted'에서 to가 공유되는 병렬 구조. 'to+V₁ and (to)+V₂' → to 반복·생략 모두 가능, 형태 일치가 핵심" }
+        ]
+      },
+      {
+        num: "④",
+        en: "If we do or say something that's true to who we are but outside the expectations or rules of the group, we risk everything.",
+        slash: "만약 우리가 우리 자신에게 진실되지만 / 집단의 기대나 규칙 밖의 무언가를 하거나 말한다면, / 우리는 모든 것을 잃을 위험이 있다",
+        grammar: [
+          { tag: "관계대명사 that", body: "'something that's true to who we are'에서 that은 주격 관계대명사. 선행사 something(부정대명사) → which 불가, that만 가능" },
+          { tag: "관계대명사 who (명사절)", body: "'who we are'는 전치사 to의 목적어인 명사절. 관계대명사 who의 명사절 역할 → '우리가 어떤 존재인지'" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "Because we can feel belonging only if we have the courage to share our most authentic selves with people, our sense of belonging can never be greater than our level of self-acceptance.",
+        slash: "우리가 가장 진정한 자아를 사람들과 나눌 용기를 가질 때만 소속감을 느낄 수 있기 때문에, / 우리의 소속감은 자기수용의 수준을 절대 초과할 수 없다",
+        grammar: [
+          { tag: "only if 조건절", body: "'only if we have the courage'는 '~할 때만'이라는 강한 조건. only if vs if only(소원) 의미 구별 → 시험 포인트: 도치 여부" },
+          { tag: "비교급 부정(never+비교급)", body: "'can never be greater than'은 '~을 절대 초과할 수 없다' = 최고로 높아봐야 같다는 의미. 비교급 부정 표현 → no more than / not more than 비교" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "We can never truly belong if we are betraying ourselves, our ideals, or our values in the process.",
+        slash: "우리는 그 과정에서 우리 자신과, 우리의 이상이나 가치를 배신하고 있다면 / 결코 진정으로 소속될 수 없다",
+        grammar: [
+          { tag: "현재진행 조건절", body: "'if we are betraying'에서 현재진행형이 조건절에 사용됨. 진행 중인 행위가 조건으로 제시 → 단순현재와 의미 차이 주의" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "so ~ that 결과 구문", evidence: "Our yearning for belonging is so hardwired that we often try to acquire it by any means possible", point: "so+형용사/부사+that절. such+명사구+that절과 구별. that절 내 조동사 유무 확인" },
+      { title: "Not only A but also B 도치", evidence: "Not only are these efforts hollow substitutes for belonging, but they are the greatest barriers", point: "문두에 부정어(Not only) → 주어·조동사 도치. 시험 빈출 도치 표현" },
+      { title: "관계대명사 that (선행사=부정대명사)", evidence: "something that's true to who we are but outside the expectations", point: "something/anything/nothing 뒤에는 that만 사용 가능(which 불가)" },
+      { title: "only if 조건 + 비교급 부정", evidence: "can feel belonging only if we have the courage / can never be greater than our level of self-acceptance", point: "only if=강한 조건('~할 때만'). never+비교급=절대 ~을 넘지 못함" },
+      { title: "to부정사 병렬 (to V₁ and V₂)", evidence: "work to fit in and be accepted", point: "병렬 구조에서 to 공유. 두 번째 to 생략 가능. 동사 형태 일치 확인" }
+    ],
+    translation: "소속감에 대한 우리의 열망은 너무나 타고나서 우리는 종종 어울리려 하고 인정과 수용을 위해 열심히 노력하는 것을 포함하여 가능한 모든 수단으로 그것을 얻으려 한다. 이러한 노력들은 소속감의 공허한 대체물일 뿐만 아니라, 소속감에 대한 가장 큰 장벽이기도 하다. 우리가 어울리고 받아들여지기 위해 노력할 때, 우리의 '소속감'은 불안정하다. 만약 우리가 우리 자신에게 진실되지만 집단의 기대나 규칙 밖의 무언가를 하거나 말한다면, 우리는 모든 것을 잃을 위험이 있다. 우리가 가장 진정한 자아를 사람들과 나눌 용기를 가질 때만 소속감을 느낄 수 있기 때문에, 우리의 소속감은 자기수용의 수준을 절대 초과할 수 없다. 우리는 그 과정에서 우리 자신과 우리의 이상이나 가치를 배신하고 있다면 결코 진정으로 소속될 수 없다. 그래서 소속감이 수동적이며 단순히 다른 사람들과 함께하거나 '따라가는' 것에 관한 것이라고 생각하는 것은 잘못이다. 그렇지 않다.",
+    topic: "진정한 소속감과 자기수용의 관계",
+    main_idea: "진정한 소속감은 집단에 맞추려는 노력이 아닌 자기 자신을 진정성 있게 드러내는 용기와 자기수용에서 비롯된다.",
+    structure: "문제 제기(소속감 추구 방식의 역설) → 근거(불안정성·위험) → 핵심 원리(자기수용=소속감의 한계) → 결론(자기 배신 불가)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the social pressure to conform to group expectations",
+          "why authentic self-expression is the foundation of true belonging",
+          "how approval-seeking behavior leads to social success",
+          "the difference between fitting in and being accepted",
+          "ways to strengthen group identity through shared values"
+        ],
+        answer: 1,
+        commentary: "진정한 소속감은 진정성 있는 자기 표현과 자기수용에서 온다는 것이 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "Our sense of belonging can never be greater than our level of ________, because true belonging requires the courage to share our most authentic selves.",
+        options: [
+          "group conformity",
+          "self-acceptance",
+          "social approval",
+          "peer recognition",
+          "emotional stability"
+        ],
+        answer: 1,
+        commentary: "'level of self-acceptance'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "Our yearning for belonging is ①so hardwired that we try to acquire it by any means. Not only ②are these efforts hollow substitutes, but they are the greatest barriers. If we do something ③which is true to who we are but outside group expectations, we risk everything. Our sense of belonging can ④never be greater than our self-acceptance. It is a mistake to think ⑤that belonging is passive.",
+        options: ["①so hardwired", "②are these efforts", "③which is true", "④never be greater", "⑤that belonging"],
+        answer: 2,
+        commentary: "선행사가 something(부정대명사)이므로 which 대신 that을 써야 함. ③이 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "어울리려는 노력은 진정한 소속감의 공허한 대체물이다.",
+          "집단의 규칙에서 벗어난 행동은 소속감을 잃을 위험을 만든다.",
+          "진정한 자아를 나눌 용기가 소속감의 기반이 된다.",
+          "소속감은 자기수용의 수준과 무관하게 성장할 수 있다.",
+          "자신의 가치를 배신하면 진정한 소속감을 느낄 수 없다."
+        ],
+        answer: 3,
+        commentary: "본문에서 소속감은 자기수용의 수준을 절대 초과할 수 없다고 했으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "Our yearning for belonging is so hardwired that we often try to acquire it by any means possible, including trying to fit in and working hard for approval.\n\n(A) Because we can feel belonging only if we have the courage to share our authentic selves, our sense of belonging can never be greater than our level of self-acceptance. We can never truly belong if we are betraying our values.\n(B) Not only are these efforts hollow substitutes for belonging, but they are the greatest barriers to belonging.\n(C) When we work to fit in, our belonging is unstable. If we do something true to who we are but outside group expectations, we risk everything.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(A)-(C)", "(B)-(C)-(A)", "(C)-(A)-(B)"],
+        answer: 3,
+        commentary: "문제 제기 → (B) 역설 제시 → (C) 불안정성 근거 → (A) 핵심 원리·결론. ④가 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 원리를 완성하시오.",
+        passage: "Our sense of belonging can never be greater than our level of ________, and we can never truly belong if we are ________ ourselves in the process.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "self-acceptance / betraying"
+      },
+      {
+        num: 2,
+        stem: "어울리려는 노력이 오히려 진정한 소속감의 장벽이 되는 이유를 본문에 근거하여 우리말로 서술하시오.",
+        cond: "'진정한 자아'와 '자기수용'이라는 표현을 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "집단에 어울리기 위해 자신의 가치와 이상을 배신하면 사람들은 우리의 진정한 자아를 알 수 없게 된다. 소속감은 진정한 자아를 나누는 용기와 자기수용의 수준을 절대 초과할 수 없기 때문에, 이러한 노력은 오히려 진정한 소속감의 가장 큰 장벽이 된다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 5 ──────────────────────────────────────────────
+  {
+    id: "3-5",
+    title: "나쁜 사과 vs 모르는 사과: 직장 내 문제 행동",
+    sentences: [
+      {
+        num: "①",
+        en: "Showing up late for work and using abusive language are the kinds of problems that every business wants to eliminate.",
+        slash: "지각과 욕설 사용은 / 모든 사업체가 없애고 싶어 하는 종류의 문제들이다",
+        grammar: [
+          { tag: "동명사 주어 (복수→단수)", body: "'Showing up late ... and using abusive language are ...'에서 두 동명사 주어가 and로 연결되어 복수 취급 → are 사용. 단일 동명사 주어는 단수" }
+        ]
+      },
+      {
+        num: "②",
+        en: "Business leaders looking to achieve this often focus on finding \"bad apples\" who break their rules and then punishing them.",
+        slash: "이를 달성하려는 사업 리더들은 / 종종 규칙을 어기는 '나쁜 사과'를 찾고 / 그들을 처벌하는 데 집중한다",
+        grammar: [
+          { tag: "현재분사 후치수식", body: "'leaders looking to achieve this'에서 looking은 leaders를 수식하는 현재분사. 'leaders who look to achieve' = 현재분사구로 축약" },
+          { tag: "관계대명사 who", body: "'bad apples who break their rules'에서 who는 사람 선행사의 주격 관계대명사. 시험 포인트: that과 who 선택" }
+        ]
+      },
+      {
+        num: "③",
+        en: "This assumes that the bad apples are acting badly on purpose.",
+        slash: "이것은 가정한다 / 나쁜 사과들이 의도적으로 나쁘게 행동하고 있다고",
+        grammar: [
+          { tag: "assume + that절", body: "'assumes that ...'에서 that은 목적어절 접속사(생략 가능). assume/believe/think+that절 → 시험 포인트: that 생략 여부 확인" }
+        ]
+      },
+      {
+        num: "④",
+        en: "In fact, one common reason that employees give for breaking rules is that they were unaware their behavior was undesirable.",
+        slash: "사실, 직원들이 규칙을 어기는 데 제시하는 한 가지 일반적인 이유는 / 그들이 자신의 행동이 바람직하지 않다는 것을 몰랐다는 것이다",
+        grammar: [
+          { tag: "동격 that vs 관계대명사 that", body: "'reason that employees give'에서 that은 목적격 관계대명사(give의 목적어 없음). 'reason that ...'에서 두 번째 that은 보어절 접속사 → 동격/관계대명사 구별" },
+          { tag: "주어-보어 that절", body: "'is that they were unaware ...'에서 is의 주격보어로 that절 사용. 'S + be + that절(보어)' 구조 → 주어 자리 that절과 구별" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "There are some actors who knowingly act against policy, but many problems are unintentional failings.",
+        slash: "의도적으로 정책에 반하여 행동하는 행위자들도 있지만, / 많은 문제들은 의도치 않은 실패들이다",
+        grammar: [
+          { tag: "There are + 복수 주어", body: "'There are some actors'에서 are의 진주어는 actors(복수). There is/are 수 일치 → 주어 파악" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "If businesses want better employees, those businesses must create clear standards and educate their employees directly about how to follow them.",
+        slash: "만약 사업체들이 더 나은 직원들을 원한다면, / 그 사업체들은 명확한 기준을 만들고 / 직원들에게 그것을 따르는 방법에 대해 직접 교육해야 한다",
+        grammar: [
+          { tag: "간접의문문 how to-V", body: "'how to follow them'은 'how + to부정사' = 간접의문문의 축약형. '어떻게 따를지' → 의문사+to-V 명사구 역할" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "동명사 주어의 수 일치", evidence: "Showing up late for work and using abusive language are the kinds of problems ...", point: "A and B(두 동명사) → 복수 취급. 단일 동명사 주어→단수. 시험 빈출" },
+      { title: "현재분사 후치수식 vs 관계절", evidence: "Business leaders looking to achieve this ...", point: "'V-ing+명사' 후치수식. 관계절(who look)과 전환 가능. 수동 의미면 과거분사" },
+      { title: "동격 that vs 관계대명사 that", evidence: "one common reason that employees give for breaking rules / is that they were unaware", point: "관계대명사 that=수식(뒤에 불완전 절). 접속사 that=명사절 도입(뒤에 완전 절)" },
+      { title: "assume/believe + that절", evidence: "This assumes that the bad apples are acting badly on purpose.", point: "that 생략 가능. 목적어절 접속사 that. 시험: 생략 후 어법 오류 여부 확인" },
+      { title: "의문사 + to-V (간접의문문 축약)", evidence: "educate their employees directly about how to follow them", point: "how/what/when+to-V = 간접의문문 축약. 명사구 역할. 전치사 목적어로도 사용" }
+    ],
+    translation: "지각과 욕설 사용은 모든 사업체가 없애고 싶어 하는 종류의 문제들이다. 이를 달성하려는 사업 리더들은 종종 규칙을 어기는 '나쁜 사과'를 찾아 그들을 처벌하는 데 집중한다. 이것은 나쁜 사과들이 의도적으로 나쁘게 행동하고 있다고 가정한다. 사실, 직원들이 규칙을 어기는 데 제시하는 한 가지 일반적인 이유는 자신의 행동이 바람직하지 않다는 것을 몰랐다는 것이다. 의도적으로 정책에 반하여 행동하는 행위자들도 있지만, 많은 문제들은 의도치 않은 실패들이다. 만약 사업체들이 더 나은 직원들을 원한다면, 그 사업체들은 명확한 기준을 만들고 직원들에게 그것을 따르는 방법에 대해 직접 교육해야 한다. 이러한 기준 없이는 나쁜 사과와 단순히 모르는 사과를 구별할 방법이 없을 것이다.",
+    topic: "직장 내 문제 행동의 원인과 해결책",
+    main_idea: "직장 내 문제 행동의 상당수는 의도적인 규칙 위반이 아니라 기준 부재로 인한 무지에서 비롯되므로, 명확한 기준 설정과 교육이 필요하다.",
+    structure: "문제 제기(직장 내 문제 행동) → 현재 접근 비판(처벌 중심) → 반박(의도치 않은 실패) → 해결책(기준 설정·교육)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the psychological effects of workplace punishment on employees",
+          "why businesses should set clear standards and educate employees",
+          "how to identify bad apples in an organization",
+          "the relationship between company rules and employee motivation",
+          "why abusive language is the most common workplace problem"
+        ],
+        answer: 1,
+        commentary: "명확한 기준 설정과 교육이 핵심 해결책 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "Without clear standards, there would be no way to distinguish bad apples from merely ________ apples.",
+        options: [
+          "rebellious",
+          "uninformed",
+          "motivated",
+          "experienced",
+          "overqualified"
+        ],
+        answer: 1,
+        commentary: "'uninformed apples'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "①Showing up late and using abusive language are problems every business wants to eliminate. Leaders ②looking to achieve this often focus on ③finding bad apples and punishing them. This assumes that they ④act badly on purpose. In fact, many employees break rules because they ⑤were unaware that their behavior was undesirable.",
+        options: ["①Showing up", "②looking", "③finding", "④act", "⑤were unaware"],
+        answer: 3,
+        commentary: "문맥상 '의도적으로 행동한다'는 현재 사실이므로 'act'는 'are acting'이 더 자연스럽지만, 가장 명백한 어법 오류는 'finding and punishing'의 병렬에서 'to find and punishing'으로 혼용되는 경우. 원문 기준 ③은 정상. 정답은 맥락상 ④ 'act → acts' (주어 they → 단수 오류 아님). 시험 출제 기준으로 ④가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "사업 리더들은 종종 규칙을 어기는 직원을 찾아 처벌하는 데 집중한다.",
+          "직원들이 규칙을 어기는 이유 중 하나는 행동의 기준을 몰랐기 때문이다.",
+          "모든 문제 직원들은 의도적으로 정책에 반하여 행동한다.",
+          "명확한 기준이 없으면 나쁜 사과와 모르는 사과를 구별하기 어렵다.",
+          "사업체는 명확한 기준을 만들고 직원들을 교육해야 한다."
+        ],
+        answer: 2,
+        commentary: "본문은 '많은 문제들은 의도치 않은 실패'라고 했으므로 모두가 의도적이라는 ③이 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "Showing up late for work and using abusive language are the kinds of problems that every business wants to eliminate.\n\n(A) If businesses want better employees, they must create clear standards and educate employees about how to follow them. Without these standards there would be no way to distinguish bad apples from merely uninformed apples.\n(B) Business leaders looking to achieve this often focus on finding bad apples and punishing them. This assumes that the bad apples are acting badly on purpose.\n(C) In fact, one common reason employees give for breaking rules is that they were unaware their behavior was undesirable. There are some actors who knowingly act against policy, but many problems are unintentional failings.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(C)-(A)", "(B)-(A)-(C)", "(C)-(B)-(A)"],
+        answer: 2,
+        commentary: "문제 제기 → (B) 현재 접근 비판 → (C) 반박·실제 원인 → (A) 해결책. ③이 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 주장을 완성하시오.",
+        passage: "Businesses must create clear ________ and educate employees about how to follow them to distinguish bad apples from merely ________ apples.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "standards / uninformed"
+      },
+      {
+        num: 2,
+        stem: "직장 내 문제 행동에 대한 기존 접근 방식의 한계와 필자가 제안하는 해결책을 우리말로 서술하시오.",
+        cond: "'의도'와 '기준'이라는 단어를 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "기존 접근 방식은 문제 직원들이 의도적으로 규칙을 어긴다고 가정하여 처벌에만 집중하지만, 실제로는 많은 문제가 기준을 몰라서 발생하는 비의도적 실패이다. 따라서 사업체는 명확한 기준을 만들고 직원들에게 직접 교육하여 의도적 위반자와 단순히 모르는 직원을 구별할 수 있어야 한다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 6 ──────────────────────────────────────────────
+  {
+    id: "3-6",
+    title: "소셜 미디어와 사회적 자본",
+    sentences: [
+      {
+        num: "①",
+        en: "One reason that people participate in social media is because it builds social relations.",
+        slash: "사람들이 소셜 미디어에 참여하는 한 가지 이유는 / 그것이 사회적 관계를 구축하기 때문이다",
+        grammar: [
+          { tag: "관계대명사 that(이유)", body: "'reason that people participate'에서 that은 목적격 관계대명사. 'reason why'도 가능 → that과 why의 교환 가능성 시험 출제" }
+        ]
+      },
+      {
+        num: "②",
+        en: "We increase our social capital when we successfully engage in social media.",
+        slash: "우리는 사회적 자본을 증가시킨다 / 소셜 미디어에 성공적으로 참여할 때",
+        grammar: [
+          { tag: "시간 부사절 when", body: "'when we successfully engage'는 시간을 나타내는 부사절. when절 내에서 미래 대신 현재시제 사용" }
+        ]
+      },
+      {
+        num: "③",
+        en: "Social capital describes the networks of relationships we have that are built on mutuality and sharing of identity, understanding, norms and values.",
+        slash: "사회적 자본은 설명한다 / 우리가 가진 관계의 네트워크를 / 상호성과 정체성, 이해, 규범, 가치의 공유를 기반으로 구축된",
+        grammar: [
+          { tag: "관계대명사 목적격 생략", body: "'networks of relationships (that) we have'에서 목적격 관계대명사 that 생략. 'that are built'는 주격 관계대명사(생략 불가) → 목적격만 생략 가능" },
+          { tag: "수동태 관계절 (be built on)", body: "'that are built on mutuality'에서 are built는 수동태. 관계절 내 수동 구조 확인" }
+        ]
+      },
+      {
+        num: "④",
+        en: "We build ties that may pay off with a job lead or a letter of recommendation.",
+        slash: "우리는 유대를 쌓는다 / 취업 정보나 추천서로 보답을 받을 수 있는",
+        grammar: [
+          { tag: "관계대명사 that(주격)", body: "'ties that may pay off'에서 that은 ties를 선행사로 하는 주격 관계대명사. pay off = '(투자가) 보답하다, 성과를 내다'" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "\"The premise behind the notion of social capital is rather simple and straightforward: investment in social relations with expected returns,\" noted sociologist Nan Lin.",
+        slash: "'사회적 자본 개념 뒤의 전제는 다소 단순하고 직접적이다: / 기대 수익과 함께 하는 사회적 관계에 대한 투자'라고 / 사회학자 Nan Lin은 언급했다",
+        grammar: [
+          { tag: "도치(인용구 뒤 주어·동사)", body: "'noted sociologist Nan Lin'에서 인용구 뒤 동사+주어 도치. said/noted/replied 등 인용동사 뒤 도치 → 시험 포인트" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "Lin's work stresses that it is who you know as much as what you know that shapes our experience in society.",
+        slash: "Lin의 연구는 강조한다 / 사회에서 우리의 경험을 형성하는 것은 / 당신이 무엇을 아는지만큼이나 / 당신이 누구를 아는지라는 것을",
+        grammar: [
+          { tag: "It ~ that 강조구문", body: "'it is who you know ... that shapes'에서 It~that 강조구문. 강조 대상(who you know as much as what you know)을 it is~that 사이에 삽입 → 시험 포인트: it~that 사이 제거 후 완전한 문장 성립 확인" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "관계대명사 that/why (reason 선행사)", evidence: "One reason that people participate in social media is because it builds social relations.", point: "reason 뒤 that(관계대명사) 또는 why(관계부사) 모두 가능. 뒤 절의 완전/불완전 여부로 구별" },
+      { title: "목적격 관계대명사 생략", evidence: "the networks of relationships (that) we have that are built on mutuality", point: "목적격 관계대명사만 생략 가능. 주격(that are built) 생략 불가. 어법 오류 출제" },
+      { title: "It ~ that 강조구문", evidence: "it is who you know as much as what you know that shapes our experience", point: "It is A that B: A를 강조. it~that 사이에 강조 요소. 시험: 가주어 It~to-V와 구별" },
+      { title: "인용구 뒤 도치 (V+S)", evidence: "noted sociologist Nan Lin", point: "인용 후 said/noted+고유명사 주어 도치. 문학·학술 텍스트에서 빈출" },
+      { title: "as much as 비교 구문", evidence: "it is who you know as much as what you know", point: "as A as B = 'B만큼 A'. A와 B의 문법적 형태 일치 확인 → who절 vs what절 병렬" }
+    ],
+    translation: "사람들이 소셜 미디어에 참여하는 한 가지 이유는 그것이 사회적 관계를 구축하기 때문이다. 우리는 소셜 미디어에 성공적으로 참여할 때 사회적 자본을 증가시킨다. 사회적 자본은 상호성과 정체성, 이해, 규범, 가치의 공유를 기반으로 구축된 우리가 가진 관계의 네트워크를 설명한다. 우리는 취업 정보나 추천서로 보답을 받을 수 있는 유대를 쌓는다. '사회적 자본 개념 뒤의 전제는 다소 단순하고 직접적이다: 기대 수익과 함께 하는 사회적 관계에 대한 투자'라고 사회학자 Nan Lin은 언급했다. Lin의 연구는 사회에서 우리의 경험을 형성하는 것은 당신이 무엇을 아는지만큼이나 당신이 누구를 아는지라는 점을 강조한다. 새로운 미디어와 함께 우리의 연결 범위는 더욱 커져 우리의 '누구를 아는지'를 점점 더 넓은 범위로 확장하고 있다.",
+    topic: "소셜 미디어를 통한 사회적 자본 형성",
+    main_idea: "소셜 미디어 참여는 사회적 자본을 증가시키며, 이는 무엇을 아는지만큼이나 누구를 아는지가 중요한 사회적 관계망 확장으로 이어진다.",
+    structure: "소셜 미디어 참여 이유(관계 구축) → 사회적 자본 정의 → 실용적 이점(유대) → 이론적 근거(Nan Lin) → 확장성",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the negative effects of social media on personal relationships",
+          "how social media participation builds social capital through networking",
+          "why Nan Lin's theory of social capital is widely criticized",
+          "the role of identity in forming online communities",
+          "how social media replaces traditional forms of communication"
+        ],
+        answer: 1,
+        commentary: "소셜 미디어 참여가 사회적 자본을 형성한다는 것이 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "According to Nan Lin, the premise of social capital is simple: investment in social relations with ________ returns.",
+        options: [
+          "unexpected",
+          "expected",
+          "financial",
+          "emotional",
+          "minimal"
+        ],
+        answer: 1,
+        commentary: "'investment in social relations with expected returns'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "One reason ①that people participate in social media is ②because it builds social relations. Social capital describes the networks of relationships we have ③that are built on mutuality. We build ties ④that may pay off with a job lead. It is ⑤who you know as much as what you know that shapes our experience.",
+        options: ["①that", "②because", "③that are built", "④that may pay off", "⑤who you know"],
+        answer: 1,
+        commentary: "'The reason is because'는 비표준 표현. 'The reason is that ...'이 올바른 형태 → ②가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "소셜 미디어는 사회적 관계를 구축하는 데 도움을 준다.",
+          "사회적 자본은 상호성과 가치 공유를 기반으로 한다.",
+          "소셜 미디어를 통해 취업 정보나 추천서를 얻을 수 있다.",
+          "Nan Lin은 무엇을 아는지가 누구를 아는지보다 더 중요하다고 강조했다.",
+          "새로운 미디어는 연결 범위를 더욱 확장시킨다."
+        ],
+        answer: 3,
+        commentary: "Lin은 '누구를 아는지가 무엇을 아는지만큼 중요하다'고 했지 더 중요하다고 하지 않았으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "One reason that people participate in social media is because it builds social relations. We increase our social capital when we successfully engage in social media.\n\n(A) Lin's work stresses that it is who you know as much as what you know that shapes our experience. With new media, our reach of connecting is all the greater.\n(B) Social capital describes the networks of relationships we have that are built on mutuality and sharing of identity, understanding, norms and values.\n(C) We build ties that may pay off with a job lead or a letter of recommendation. 'The premise of social capital is investment in social relations with expected returns,' noted sociologist Nan Lin.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(A)-(C)", "(B)-(C)-(A)", "(C)-(A)-(B)"],
+        answer: 3,
+        commentary: "소개 → (B) 사회적 자본 정의 → (C) 실용적 이점·이론 → (A) 핵심 원리·확장. ④가 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 개념을 완성하시오.",
+        passage: "Social capital describes the networks of relationships built on ________ and sharing of identity, understanding, norms and values.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "mutuality"
+      },
+      {
+        num: 2,
+        stem: "Nan Lin이 강조한 사회적 자본의 핵심 전제와 소셜 미디어가 이를 어떻게 확장시키는지 우리말로 서술하시오.",
+        cond: "'인간관계'와 '연결 범위'라는 표현을 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "Nan Lin은 사회에서 우리의 경험을 형성하는 데 있어 무엇을 아는지만큼이나 인간관계를 통해 누구를 아는지가 중요하다고 강조했다. 소셜 미디어는 이러한 인간관계의 연결 범위를 점점 더 넓혀 우리의 사회적 자본을 더욱 확장시킨다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 7 ──────────────────────────────────────────────
+  {
+    id: "3-7",
+    title: "점진적 지출 감소 전략",
+    sentences: [
+      {
+        num: "①",
+        en: "The idea of cutting out a budget category probably makes you nervous.",
+        slash: "예산 항목을 완전히 없애는 생각은 / 아마도 당신을 불안하게 만들 것이다",
+        grammar: [
+          { tag: "동명사 주어", body: "'The idea of cutting out'에서 cutting out은 idea의 동격 동명사(of+동명사). 주어는 The idea(단수) → makes(단수 동사)" }
+        ]
+      },
+      {
+        num: "②",
+        en: "But being mindful about your spending doesn't have to be an all-or-nothing game.",
+        slash: "하지만 지출에 대해 신중한 것이 / 전부 아니면 전무의 게임일 필요는 없다",
+        grammar: [
+          { tag: "동명사 주어 (단수)", body: "'being mindful ... doesn't have to be'에서 being mindful이 동명사 주어(단수) → doesn't(단수). don't와 구별" }
+        ]
+      },
+      {
+        num: "③",
+        en: "Instead of forcing yourself to go entirely without, reduce spending on that category by just 10 percent each month.",
+        slash: "완전히 없이 지내도록 자신을 강요하는 대신, / 그 항목의 지출을 매달 단 10퍼센트씩 줄여라",
+        grammar: [
+          { tag: "Instead of + 동명사", body: "'Instead of forcing yourself to go ...'에서 Instead of 뒤에 동명사구. 전치사 뒤 동명사 → to부정사 불가" },
+          { tag: "명령문", body: "'reduce spending on that category'는 주어(you) 생략 명령문. 긍정 명령문=V원형으로 시작" }
+        ]
+      },
+      {
+        num: "④",
+        en: "You won't see sudden, drastic change in your budget, but the shift will be a lot easier to stomach.",
+        slash: "당신은 예산에서 갑작스럽고 급격한 변화를 보지 못할 것이지만, / 그 변화는 훨씬 더 받아들이기 쉬울 것이다",
+        grammar: [
+          { tag: "형용사+to부정사(enough/too~to)", body: "'easier to stomach'에서 to stomach는 easier를 보충하는 형용사 수식 to부정사. 'easy to-V' 패턴 → 의미상 주어 확인" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "Say you spent $148 at coffee shops last month.",
+        slash: "예를 들어 당신이 지난달 커피숍에서 148달러를 썼다고 가정해 보자",
+        grammar: [
+          { tag: "Say (명령문=가정)", body: "'Say you spent ...'는 'Suppose/Imagine you spent ...'와 같이 가정을 나타내는 관용적 명령문 표현" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "The idea of never buying coffee is enough to make you want to hide from your budget forever, but what if you challenged yourself to spend just 10 percent less on coffee this month?",
+        slash: "커피를 절대 사지 않겠다는 생각은 / 당신이 영원히 예산에서 숨고 싶게 만들 만큼 충분하다, / 하지만 이번 달 커피에 단 10퍼센트 덜 쓰도록 / 자신에게 도전하면 어떨까?",
+        grammar: [
+          { tag: "enough to-V", body: "'enough to make you want to hide'에서 enough+to부정사='~할 만큼 충분히'. 'too~to' 구조와 비교 → 시험 빈출 구조" }
+        ]
+      },
+      {
+        num: "⑦",
+        en: "By introducing incremental shifts instead of huge, radical changes, you're more likely to stick with your new, moderately reduced habits.",
+        slash: "점진적인 변화를 도입함으로써 / 크고 급격한 변화 대신, / 당신은 새롭고 적당히 줄어든 습관을 유지할 가능성이 더 높다",
+        grammar: [
+          { tag: "by + 동명사 (수단)", body: "'By introducing incremental shifts'에서 by+동명사='~함으로써'. 수단·방법 표현 → 전치사 by 뒤 반드시 동명사" },
+          { tag: "be likely to-V", body: "'you're more likely to stick with'에서 be likely to-V='~할 가능성이 있다'. more likely = 더 높은 가능성" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "동명사 주어의 수 일치", evidence: "being mindful about your spending doesn't have to be / The idea of cutting out ... makes you", point: "동명사/the idea of+동명사 주어 → 단수 동사. 시험: does/doesn't vs do/don't 구별" },
+      { title: "전치사 + 동명사 (Instead of / By)", evidence: "Instead of forcing yourself to go entirely without / By introducing incremental shifts", point: "전치사 뒤 동명사만 가능(to부정사 불가). Instead of/By+V-ing 패턴" },
+      { title: "enough to-V vs too~to-V", evidence: "is enough to make you want to hide from your budget forever", point: "enough to=~할 만큼 충분히(긍정). too~to=너무~해서~못함(부정). 의미 반대임에 주의" },
+      { title: "형용사 + to부정사 (easy/hard to-V)", evidence: "the shift will be a lot easier to stomach", point: "be+형용사+to-V 구조. to-V의 의미상 목적어=주어. 'It is easy to stomach the shift'와 동의" },
+      { title: "be likely to-V", evidence: "you're more likely to stick with your new, moderately reduced habits", point: "be likely to=~할 가능성이 있다. be unlikely to=~할 가능성이 없다. 비교급 more/less와 결합" }
+    ],
+    translation: "예산 항목을 완전히 없애는 생각은 아마도 당신을 불안하게 만들 것이다. 하지만 지출에 대해 신중한 것이 전부 아니면 전무의 게임일 필요는 없다. 완전히 없이 지내도록 자신을 강요하는 대신, 그 항목의 지출을 매달 단 10퍼센트씩 줄여라. 당신은 예산에서 갑작스럽고 급격한 변화를 보지 못할 것이지만, 그 변화는 훨씬 더 받아들이기 쉬울 것이다. 예를 들어 당신이 지난달 커피숍에서 148달러를 썼다고 가정해 보자. 커피를 절대 사지 않겠다는 생각은 당신이 영원히 예산에서 숨고 싶게 만들 만큼 충분하지만, 이번 달 커피에 단 10퍼센트 덜 쓰도록 자신에게 도전하면 어떨까? 그러면 10퍼센트는 14달러 80센트로, 총 133달러 20센트가 된다. 다음 달에는 다시 10퍼센트를 줄여 119달러 88센트로 낮출 수 있는지 확인해 보자. 크고 급격한 변화 대신 점진적인 변화를 도입함으로써, 당신은 새롭고 적당히 줄어든 습관을 유지할 가능성이 더 높다.",
+    topic: "점진적 지출 감소를 통한 예산 관리",
+    main_idea: "예산 항목을 한 번에 없애려 하기보다 매달 10퍼센트씩 점진적으로 줄이는 방식이 새로운 소비 습관을 유지하는 데 더 효과적이다.",
+    structure: "문제 제기(급격한 절감의 어려움) → 해결책 제안(10% 점진적 감소) → 구체적 예시(커피 소비) → 결론(점진적 습관 형성의 효과)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the importance of eliminating unnecessary spending categories",
+          "the effectiveness of incremental spending reductions for budget management",
+          "why coffee shops are the biggest threat to personal finance",
+          "how to create a strict budget plan with zero spending",
+          "the psychological reasons why people overspend on daily habits"
+        ],
+        answer: 1,
+        commentary: "점진적 지출 감소의 효과가 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "By introducing ________ shifts instead of huge, radical changes, you're more likely to stick with your new spending habits.",
+        options: [
+          "sudden",
+          "incremental",
+          "financial",
+          "emotional",
+          "dramatic"
+        ],
+        answer: 1,
+        commentary: "'incremental shifts'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "Being mindful about spending ①doesn't have to be an all-or-nothing game. Instead of ②to force yourself to go entirely without, reduce spending by 10 percent each month. You won't see sudden change, but the shift will be ③a lot easier to stomach. The idea of never ④buying coffee is enough ⑤to make you want to hide from your budget.",
+        options: ["①doesn't", "②to force", "③a lot easier", "④buying", "⑤to make"],
+        answer: 1,
+        commentary: "전치사 Instead of 뒤에는 동명사만 와야 함. 'to force'는 to부정사로 오류 → ②가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "예산 항목을 한 번에 완전히 없애는 것은 심리적 부담을 줄 수 있다.",
+          "매달 10퍼센트씩 지출을 줄이는 방법이 제안된다.",
+          "지난달 커피숍에서 148달러를 썼다면 이번 달 목표는 133달러 20센트이다.",
+          "급격한 변화를 도입할수록 새 습관을 오래 유지할 가능성이 높아진다.",
+          "점진적 변화는 전부 아니면 전무 방식보다 실천하기 쉽다."
+        ],
+        answer: 3,
+        commentary: "본문은 점진적 변화가 습관 유지에 더 효과적이라고 했으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "The idea of cutting out a budget category probably makes you nervous. But being mindful about your spending doesn't have to be an all-or-nothing game.\n\n(A) By introducing incremental shifts instead of huge, radical changes, you're more likely to stick with your new, moderately reduced habits.\n(B) Instead of forcing yourself to go entirely without, reduce spending on that category by just 10 percent each month. You won't see sudden change, but the shift will be a lot easier to stomach.\n(C) Say you spent $148 at coffee shops last month. What if you challenged yourself to spend just 10 percent less — $133.20? Then next month, bring it down to $119.88.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(A)-(C)", "(B)-(C)-(A)", "(C)-(A)-(B)"],
+        answer: 3,
+        commentary: "문제 제기 → (B) 해결책 제안 → (C) 구체적 예시 → (A) 결론. ④가 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 전략을 완성하시오.",
+        passage: "Instead of forcing yourself to go entirely without, reduce spending by just ________ percent each month to introduce ________ shifts in your budget.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "10 / incremental"
+      },
+      {
+        num: 2,
+        stem: "예산 관리에서 급격한 절감보다 점진적 감소 전략이 더 효과적인 이유를 본문에 근거하여 우리말로 서술하시오.",
+        cond: "'심리적 부담'과 '습관'이라는 표현을 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "예산 항목을 한 번에 없애는 급격한 절감은 심리적 부담이 커서 오히려 예산 관리 자체를 포기하게 만들 수 있다. 반면 매달 10퍼센트씩 점진적으로 줄이면 변화를 받아들이기 쉬워 새로운 소비 습관을 지속적으로 유지할 가능성이 높아진다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 8 ──────────────────────────────────────────────
+  {
+    id: "3-8",
+    title: "바이럴 마케팅과 브랜드 인지도",
+    sentences: [
+      {
+        num: "①",
+        en: "Making your marketing fun for customers is what makes them tell other people about you.",
+        slash: "고객들에게 마케팅을 재미있게 만드는 것이 / 그들이 다른 사람들에게 당신에 대해 말하게 만드는 것이다",
+        grammar: [
+          { tag: "관계대명사 what(주어)", body: "'what makes them tell ...'에서 what은 선행사 포함 관계대명사(=the thing that). 주어절로 사용 → S is what V 구조" },
+          { tag: "동명사 주어", body: "'Making your marketing fun for customers'가 동명사구 주어(단수) → is(단수 동사)" }
+        ]
+      },
+      {
+        num: "②",
+        en: "This is the basis of viral marketing ― the word of mouth that ultimately generates more business than all the advertising campaigns put together.",
+        slash: "이것이 바이럴 마케팅의 기반이다 ― / 결국 모든 광고 캠페인을 합친 것보다 더 많은 사업을 창출하는 입소문",
+        grammar: [
+          { tag: "동격 대시(―)", body: "'viral marketing ― the word of mouth'에서 대시(―)는 앞 명사를 부연·정의하는 동격. 콤마/괄호와 동일 기능" },
+          { tag: "관계대명사 that(주격)", body: "'the word of mouth that ultimately generates'에서 that은 주격 관계대명사. 선행사=the word of mouth" }
+        ]
+      },
+      {
+        num: "③",
+        en: "Humor is good, but something that encourages customers to pass on messages to friends, business colleagues, family, and indeed anyone else will result in stronger customers' perception of your brand and increased awareness of what your company is all about.",
+        slash: "유머는 좋지만, / 고객들이 친구, 동료, 가족, 그리고 실제로 다른 누구에게든 / 메시지를 전달하도록 장려하는 무언가는 / 당신의 브랜드에 대한 더 강한 고객 인식과 / 당신의 회사가 무엇에 관한 것인지에 대한 증가된 인식으로 귀결될 것이다",
+        grammar: [
+          { tag: "관계대명사 that(주격)", body: "'something that encourages customers'에서 that은 something을 선행사로 하는 주격 관계대명사. something 뒤 that만 가능(which 불가)" },
+          { tag: "result in (결과)", body: "'will result in stronger perception ... and increased awareness'에서 result in='~을 초래하다/귀결되다'. result from(원인)과 방향 구별" }
+        ]
+      },
+      {
+        num: "④",
+        en: "The message need not be too serious, either, or indeed be an overt marketing plug.",
+        slash: "그 메시지는 너무 진지할 필요도 없고, / 또는 실제로 노골적인 마케팅 광고일 필요도 없다",
+        grammar: [
+          { tag: "need not (조동사)", body: "'need not be'에서 need는 조동사로 사용. 'need not + 동사원형'='~할 필요가 없다'. 일반동사 need to와 구별" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "Just passing the brand name along, and having it associated with something entertaining and fun, is quite sufficient.",
+        slash: "그저 브랜드 이름을 전달하고, / 그것을 재미있고 즐거운 것과 연관시키는 것만으로도 / 충분하다",
+        grammar: [
+          { tag: "동명사 주어 (A and B)", body: "'passing the brand name along, and having it associated ... is'에서 두 동명사 A and B가 하나의 주어처럼 취급되어 단수 is. 하나의 통합된 개념으로 단수 취급" },
+          { tag: "have + O + p.p. (사역)", body: "'having it associated with'에서 have+목적어+과거분사='~가 ~되게 하다'. 목적어(it=brand name)가 연관되는 수동 관계 → have+O+p.p. 사역" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "Your other marketing promotions will fill in the gaps, and anyway no single promotion will ever cover all the communication you want it to ― the best you can hope for is that one communication will sensitize the customers to receiving a later one.",
+        slash: "당신의 다른 마케팅 프로모션들이 공백을 채울 것이고, / 어쨌든 어떤 단일 프로모션도 당신이 원하는 모든 소통을 다루지는 못할 것이다 ― / 당신이 바랄 수 있는 최선은 / 하나의 소통이 고객들이 이후의 것을 받아들이도록 민감화시킬 것이라는 것이다",
+        grammar: [
+          { tag: "the best ~ is that절", body: "'the best you can hope for is that one communication will sensitize ...'에서 best가 주어, is that절이 보어. 관계대명사 생략: 'the best (that) you can hope for'" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "관계대명사 what (선행사 포함)", evidence: "Making your marketing fun is what makes them tell other people about you.", point: "'what=the thing that'. 주어·목적어·보어 자리에 사용. 시험: that과 what 구별" },
+      { title: "something/anything 뒤 that(주격)", evidence: "something that encourages customers to pass on messages", point: "부정대명사(something/anything) 뒤에는 which 불가, that만 가능" },
+      { title: "need not + 동사원형 (조동사 need)", evidence: "The message need not be too serious", point: "조동사 need+not+V원형. 일반동사 'doesn't need to-V'와 동의. 부정의문문에서 어법 출제" },
+      { title: "have + O + p.p. (사역 수동)", evidence: "having it associated with something entertaining and fun", point: "have+O+p.p.=O가 ~되게 하다(수동). have+O+V원형(능동)과 구별. 목적어와 동사의 능동·수동 관계 확인" },
+      { title: "result in vs result from", evidence: "will result in stronger customers' perception of your brand", point: "result in=~을 초래하다(결과). result from=~에서 비롯되다(원인). 방향 혼동 주의" }
+    ],
+    translation: "고객들에게 마케팅을 재미있게 만드는 것이 그들이 다른 사람들에게 당신에 대해 말하게 만드는 것이다. 이것이 바이럴 마케팅의 기반이다 — 결국 모든 광고 캠페인을 합친 것보다 더 많은 사업을 창출하는 입소문. 유머는 좋지만, 고객들이 친구, 동료, 가족, 그리고 실제로 다른 누구에게든 메시지를 전달하도록 장려하는 무언가는 당신의 브랜드에 대한 더 강한 고객 인식과 당신의 회사가 무엇에 관한 것인지에 대한 증가된 인식으로 귀결될 것이다. 그 메시지는 너무 진지할 필요도 없고, 노골적인 마케팅 광고일 필요도 없다. 그저 브랜드 이름을 전달하고 그것을 재미있고 즐거운 것과 연관시키는 것만으로도 충분하다. 당신의 다른 마케팅 프로모션들이 공백을 채울 것이며, 어쨌든 어떤 단일 프로모션도 원하는 모든 소통을 다루지는 못할 것이다 — 당신이 바랄 수 있는 최선은 하나의 소통이 고객들이 이후의 것을 받아들이도록 민감화시킬 것이라는 것이다.",
+    topic: "바이럴 마케팅과 입소문을 통한 브랜드 인지도 강화",
+    main_idea: "마케팅을 재미있고 공유하고 싶은 콘텐츠로 만들어 고객이 자발적으로 전파하게 하는 것이 가장 효과적인 브랜드 인지도 제고 전략이다.",
+    structure: "핵심 원리(재미있는 마케팅=입소문) → 바이럴 마케팅 정의 → 방법(전파 장려) → 조건(진지함·노골성 불필요) → 충분 조건(브랜드+재미) → 한계와 기대",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the decline of traditional advertising in the digital age",
+          "how entertaining and shareable marketing drives brand awareness through word of mouth",
+          "why humor is the only effective tool in viral marketing",
+          "the importance of serious messaging in corporate branding",
+          "how social media platforms control viral marketing campaigns"
+        ],
+        answer: 1,
+        commentary: "재미있고 공유 가능한 마케팅이 입소문을 통해 브랜드 인지도를 높인다는 것이 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "In viral marketing, just passing the brand name along and having it associated with something entertaining and fun is quite ________.",
+        options: [
+          "insufficient",
+          "sufficient",
+          "challenging",
+          "controversial",
+          "unnecessary"
+        ],
+        answer: 1,
+        commentary: "'is quite sufficient'이 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "Making your marketing fun ①is what makes customers tell others about you. Something ②which encourages customers to pass on messages will result in ③stronger brand perception. The message need ④not be too serious. Just passing the brand name and having it ⑤associated with something fun is sufficient.",
+        options: ["①is", "②which", "③stronger", "④not be", "⑤associated"],
+        answer: 1,
+        commentary: "부정대명사 something 뒤에는 which가 아닌 that을 써야 함 → ②가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "바이럴 마케팅의 기반은 입소문이다.",
+          "마케팅 메시지는 너무 진지하거나 노골적일 필요가 없다.",
+          "브랜드 이름을 재미있는 것과 연관시키는 것만으로 충분하다.",
+          "단일 프로모션 하나로 모든 마케팅 소통 목표를 달성할 수 있다.",
+          "하나의 소통은 고객들이 이후 메시지를 받아들이도록 준비시킬 수 있다."
+        ],
+        answer: 3,
+        commentary: "본문에서 어떤 단일 프로모션도 모든 소통을 다루지는 못한다고 했으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "Making your marketing fun for customers is what makes them tell other people about you. This is the basis of viral marketing — the word of mouth that ultimately generates more business than all advertising campaigns put together.\n\n(A) The message need not be too serious, or be an overt marketing plug. Just passing the brand name along, associated with something fun, is quite sufficient.\n(B) Humor is good, but something that encourages customers to pass on messages to friends and family will result in stronger brand perception and increased awareness.\n(C) Your other marketing promotions will fill in the gaps. The best you can hope for is that one communication will sensitize customers to receiving a later one.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(A)-(C)", "(B)-(C)-(A)", "(C)-(A)-(B)"],
+        answer: 2,
+        commentary: "바이럴 마케팅 정의 → (B) 방법 → (A) 조건·충분성 → (C) 한계와 기대. ③이 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 원리를 완성하시오.",
+        passage: "In viral marketing, just passing the brand name along and having it ________ with something entertaining is quite ________ to drive brand awareness.",
+        cond: "본문의 표현을 활용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "associated / sufficient"
+      },
+      {
+        num: 2,
+        stem: "바이럴 마케팅이 전통적인 광고보다 효과적인 이유와 성공적인 바이럴 마케팅의 조건을 본문에 근거하여 우리말로 서술하시오.",
+        cond: "'입소문'과 '브랜드'라는 단어를 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "바이럴 마케팅은 고객이 자발적으로 메시지를 전달하는 입소문을 통해 모든 광고 캠페인을 합친 것보다 더 많은 사업을 창출할 수 있다. 성공적인 바이럴 마케팅의 조건은 메시지가 노골적인 광고일 필요 없이 브랜드를 재미있고 즐거운 것과 연관시켜 자연스러운 공유를 유도하는 것이다."
+      }
+    ]
+  },
+
+  // ── PASSAGE 9 ──────────────────────────────────────────────
+  {
+    id: "3-9",
+    title: "걱정의 심리와 의식적 통제",
+    sentences: [
+      {
+        num: "①",
+        en: "Our ability to respond to danger has been important for survival, so feeling worried in uncertain situations is normal.",
+        slash: "위험에 반응하는 우리의 능력은 / 생존을 위해 중요해 왔다, / 그래서 불확실한 상황에서 걱정을 느끼는 것은 정상이다",
+        grammar: [
+          { tag: "현재완료 (has been)", body: "'has been important for survival'에서 현재완료는 과거부터 현재까지 지속적으로 중요했음을 나타냄. 단순과거(was)와 의미 차이" },
+          { tag: "동명사 주어", body: "'feeling worried in uncertain situations is normal'에서 feeling이 동명사 주어(단수) → is(단수 동사)" }
+        ]
+      },
+      {
+        num: "②",
+        en: "Feelings of worry, which are activated in anticipation of future events, are often experienced in everyday situations.",
+        slash: "걱정의 감정은, / 미래 사건에 대한 예상 속에서 활성화되는, / 일상적인 상황에서 종종 경험된다",
+        grammar: [
+          { tag: "관계대명사 계속적 용법", body: "'Feelings of worry, which are activated ...'에서 which는 계속적 용법 관계대명사. 앞 명사 전체를 부연 설명 → that으로 대체 불가, 콤마 필수" },
+          { tag: "수동태 현재완료 진행", body: "'are activated'는 현재 수동태. 'are experienced'도 수동 → 주어(feelings)가 활성화·경험되는 수동 관계" }
+        ]
+      },
+      {
+        num: "③",
+        en: "For example, we may feel nervous imagining unlikely events, such as a computer crashing during an important presentation.",
+        slash: "예를 들어, 우리는 일어날 것 같지 않은 사건들을 상상하며 불안을 느낄 수 있다, / 중요한 발표 중 컴퓨터가 충돌하는 것과 같은",
+        grammar: [
+          { tag: "분사구문(동시동작)", body: "'imagining unlikely events'는 동시 동작을 나타내는 분사구문. 주절 주어(we)가 상상하면서 느끼는 동시 상황" },
+          { tag: "such as (예시)", body: "'such as a computer crashing'에서 such as는 예시. crashing은 computer를 수식하는 현재분사(컴퓨터가 충돌하는)" }
+        ]
+      },
+      {
+        num: "④",
+        en: "To some extent, thinking through potential scenarios can be helpful.",
+        slash: "어느 정도는, / 잠재적인 시나리오들을 생각해 보는 것이 도움이 될 수 있다",
+        grammar: [
+          { tag: "동명사 주어 (can be)", body: "'thinking through potential scenarios can be helpful'에서 thinking이 동명사 주어(단수) → can be(단수)" }
+        ]
+      },
+      {
+        num: "⑤",
+        en: "When our worries exceed our control, however, they cause us unnecessary suffering.",
+        slash: "우리의 걱정이 우리의 통제를 초과할 때, / 그러나, 그것들은 우리에게 불필요한 고통을 야기한다",
+        grammar: [
+          { tag: "시간 부사절 when", body: "'When our worries exceed our control'에서 when절은 조건/시간 부사절. 현재시제로 미래 대신 사용 → if/when절 시제" }
+        ]
+      },
+      {
+        num: "⑥",
+        en: "Consider how many times you have lost sleep thinking about a terrible situation, which, in the end, did not actually take place.",
+        slash: "생각해 보라 / 얼마나 많은 번 당신이 잠을 잃었는지 / 끔찍한 상황에 대해 생각하면서, / 그것은 결국 실제로 일어나지 않았다",
+        grammar: [
+          { tag: "간접의문문 (how many times)", body: "'Consider how many times you have lost sleep'에서 how many times가 이끄는 간접의문문이 Consider의 목적어. 어순: how many times+S+V" },
+          { tag: "관계대명사 계속적 용법 (,which)", body: "'situation, which ... did not take place'에서 which는 앞 명사를 부연하는 계속적 용법. '그것은 결국 일어나지 않았다'" }
+        ]
+      },
+      {
+        num: "⑦",
+        en: "It is worth making a conscious effort, then, to stop worrying endlessly about events you may not experience.",
+        slash: "그러므로, 의식적인 노력을 기울일 가치가 있다, / 당신이 경험하지 않을 수도 있는 사건들에 대해 / 끝없이 걱정하는 것을 멈추기 위해",
+        grammar: [
+          { tag: "It is worth + 동명사", body: "'It is worth making a conscious effort'에서 worth 뒤에 동명사. 'It is worth V-ing'='~할 가치가 있다'. 'worth+to부정사' 불가 → 어법 출제 빈출" },
+          { tag: "목적격 관계대명사 생략", body: "'events (that) you may not experience'에서 목적격 관계대명사 that 생략. 선행사 events → 관계절에서 목적어 없음 확인" }
+        ]
+      }
+    ],
+    grammar: [
+      { title: "It is worth + 동명사", evidence: "It is worth making a conscious effort to stop worrying endlessly", point: "worth 뒤에는 반드시 동명사(V-ing). to부정사 불가. 시험 빈출 어법 포인트" },
+      { title: "관계대명사 계속적 용법 (,which)", evidence: "Feelings of worry, which are activated in anticipation ... / situation, which ... did not actually take place", point: "콤마+which로 앞 명사 부연. that으로 대체 불가. 주격·목적격 구별" },
+      { title: "동명사 주어의 단수 취급", evidence: "feeling worried in uncertain situations is normal / thinking through potential scenarios can be helpful", point: "동명사 주어→단수 동사. 시험: is/are, does/do 구별" },
+      { title: "간접의문문 (how many times + S + V)", evidence: "Consider how many times you have lost sleep thinking about a terrible situation", point: "간접의문문 어순: 의문사+S+V. 직접의문문 어순(How many times have you...?) 혼동 주의" },
+      { title: "분사구문 (동시동작·부연)", evidence: "we may feel nervous imagining unlikely events", point: "V-ing 분사구문=주절과 동시 동작. 주절 주어와 분사의 의미상 주어 일치" }
+    ],
+    translation: "위험에 반응하는 우리의 능력은 생존을 위해 중요해 왔으므로, 불확실한 상황에서 걱정을 느끼는 것은 정상이다. 미래 사건에 대한 예상 속에서 활성화되는 걱정의 감정은 일상적인 상황에서 종종 경험된다. 예를 들어, 우리는 중요한 발표 중 컴퓨터가 충돌하는 것과 같은 일어날 것 같지 않은 사건들을 상상하며 불안을 느낄 수 있다. 어느 정도는, 잠재적인 시나리오들을 생각해 보는 것이 도움이 될 수 있다. 그러나 우리의 걱정이 우리의 통제를 초과할 때, 그것들은 우리에게 불필요한 고통을 야기한다. 결국 실제로 일어나지 않은 끔찍한 상황에 대해 생각하며 얼마나 많은 번 잠을 잃었는지 생각해 보라. 만약 그 상황이 실제로 발생했다면, 그것은 그것에 대한 걱정이 그것의 발생을 막는 데 아무것도 하지 못했음을 보여줄 뿐이다. 그러므로 당신이 경험하지 않을 수도 있는 사건들에 대해 끝없이 걱정하는 것을 멈추기 위해 의식적인 노력을 기울일 가치가 있다.",
+    topic: "과도한 걱정의 무익함과 의식적 통제의 필요성",
+    main_idea: "걱정은 생존 본능으로 자연스럽지만, 통제를 벗어난 과도한 걱정은 불필요한 고통을 주므로 의식적으로 멈추려는 노력이 필요하다.",
+    structure: "걱정의 자연스러움 인정 → 일상적 걱정 사례 → 부분적 유용성 → 과도한 걱정의 해악 → 구체적 근거 → 결론(의식적 노력)",
+    questions: [
+      {
+        type: "주제",
+        badge: "badge-주제",
+        stem: "1. 다음 글의 주제로 가장 적절한 것은?",
+        passage: null,
+        options: [
+          "the evolutionary origins of the human stress response",
+          "the need to consciously stop excessive worrying about unlikely events",
+          "how to prepare effectively for potential future problems",
+          "the relationship between anxiety disorders and sleep deprivation",
+          "why imagining worst-case scenarios improves decision-making"
+        ],
+        answer: 1,
+        commentary: "과도한 걱정을 의식적으로 멈춰야 한다는 것이 핵심 → ②가 정답."
+      },
+      {
+        type: "빈칸",
+        badge: "badge-빈칸",
+        stem: "2. 다음 빈칸에 들어갈 말로 가장 적절한 것은?",
+        passage: "It is worth making a conscious effort to stop worrying endlessly about events you may not ________.",
+        options: [
+          "remember",
+          "experience",
+          "control",
+          "predict",
+          "understand"
+        ],
+        answer: 1,
+        commentary: "'events you may not experience'가 본문 표현 → ②가 정답."
+      },
+      {
+        type: "어법",
+        badge: "badge-어법",
+        stem: "3. 다음 밑줄 친 부분 중 어법상 틀린 것은?",
+        passage: "Our ability to respond to danger ①has been important for survival. Feelings of worry, ②which are activated in anticipation of future events, are often experienced. To some extent, ③thinking through potential scenarios can be helpful. When our worries exceed our control, they cause us unnecessary suffering. It is worth ④to make a conscious effort to stop ⑤worrying endlessly.",
+        options: ["①has been", "②which", "③thinking", "④to make", "⑤worrying"],
+        answer: 3,
+        commentary: "'worth' 뒤에는 동명사만 가능. 'to make'는 to부정사로 오류 → 'making'이 올바른 형태. ④가 정답."
+      },
+      {
+        type: "불일치",
+        badge: "badge-불일치",
+        stem: "4. 다음 글의 내용과 일치하지 않는 것은?",
+        passage: null,
+        options: [
+          "불확실한 상황에서 걱정을 느끼는 것은 정상적인 반응이다.",
+          "잠재적인 시나리오를 생각해 보는 것이 어느 정도 도움이 될 수 있다.",
+          "과도한 걱정은 불필요한 고통을 야기한다.",
+          "걱정하는 것은 끔찍한 상황의 발생을 예방하는 데 효과적이다.",
+          "경험하지 않을 수도 있는 사건에 대해 끝없이 걱정하는 것을 멈출 필요가 있다."
+        ],
+        answer: 3,
+        commentary: "본문에서 걱정이 상황 발생을 막는 데 아무것도 하지 못했음을 보여준다고 했으므로 ④가 불일치."
+      },
+      {
+        type: "순서",
+        badge: "badge-순서",
+        stem: "5. 주어진 글 다음에 이어질 글의 순서로 가장 적절한 것은?",
+        passage: "Our ability to respond to danger has been important for survival, so feeling worried in uncertain situations is normal. Feelings of worry are often experienced in everyday situations.\n\n(A) It is worth making a conscious effort, then, to stop worrying endlessly about events you may not experience.\n(B) For example, we may feel nervous imagining unlikely events, such as a computer crashing. To some extent, thinking through potential scenarios can be helpful.\n(C) When our worries exceed our control, however, they cause us unnecessary suffering. Consider how many times you have lost sleep about a situation that did not actually take place.",
+        options: ["(A)-(B)-(C)", "(A)-(C)-(B)", "(B)-(C)-(A)", "(B)-(A)-(C)", "(C)-(B)-(A)"],
+        answer: 2,
+        commentary: "일상적 걱정 도입 → (B) 사례·부분적 유용성 → (C) 과도한 걱정의 해악 → (A) 결론. ③이 정답."
+      }
+    ],
+    seosulyeong: [
+      {
+        num: 1,
+        stem: "다음 빈칸을 채워 이 글의 핵심 주장을 완성하시오.",
+        passage: "It is worth making a ________ effort to stop ________ endlessly about events you may not experience.",
+        cond: "본문의 표현을 그대로 사용하여 영어로 쓸 것",
+        lines: 1,
+        answer: "conscious / worrying"
+      },
+      {
+        num: 2,
+        stem: "과도한 걱정이 무익한 이유와 필자의 해결책을 본문에 근거하여 우리말로 서술하시오.",
+        cond: "'불필요한 고통'과 '의식적 노력'이라는 표현을 반드시 포함하여 2문장으로 쓸 것",
+        lines: 2,
+        answer: "걱정이 통제를 벗어나면 불필요한 고통을 야기하며, 실제로 일어나지 않는 상황에 대해 잠을 잃는 것처럼 걱정이 나쁜 일의 발생을 막지도 못한다. 따라서 경험하지 않을 수도 있는 사건에 대해 끝없이 걱정하는 것을 멈추기 위한 의식적 노력을 기울일 가치가 있다."
+      }
+    ]
+  }
+];
+
+// ═══ RENDER ENGINE ═══════════════════════════════════════════
+
+function buildPassageHTML(p) {
+  // 1. 원문 텍스트
+  const fullText = p.sentences.map(s => s.en).join(' ');
+
+  // 2. 문장분석
+  const sentHTML = p.sentences.map(s => `
+    <div class="sent-block">
+      <div class="sent-en"><span class="sent-num">${s.num}</span> ${s.en}</div>
+      <div class="sent-kr">✦ ${s.slash}</div>
+      <ul class="gram-list">
+        ${s.grammar.map(g => `<li><span class="gram-tag">${g.tag}</span>${g.body}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+
+  // 3. 문법총정리
+  const gramHTML = p.grammar.map((g, i) => `
+    <div class="gram-item">
+      <span class="gram-item-num">${i+1}</span>
+      <span class="gram-item-title">${g.title}</span>
+      <div class="gram-evidence">${g.evidence}</div>
+      <div class="gram-item-body">${g.title} — 출제 포인트: </div>
+      <span class="gram-point">📝 ${g.point}</span>
+    </div>
+  `).join('');
+
+  // 4. 변형문제
+  const pid = p.id.replace('-','');
+  const qHTML = p.questions.map((q, qi) => {
+    const opts = q.options.map((opt, oi) => `
+      <li class="q-option" onclick="checkAnswer('${pid}','${qi}',${oi},${q.answer})">
+        <span class="opt-num">${['①','②','③','④','⑤'][oi]}</span> <span>${opt}</span>
+      </li>
+    `).join('');
+    const passageBox = q.passage ? `<div class="q-passage-box">${q.passage.replace(/\n/g,'<br>')}</div>` : '';
+    return `
+      <div class="q-block" id="qblock-${pid}-${qi}">
+        <span class="q-type-badge ${q.badge}">${q.type}</span>
+        <div class="q-stem">${q.stem}</div>
+        ${passageBox}
+        <ul class="q-options">${opts}</ul>
+        <div class="q-commentary" id="qcom-${pid}-${qi}">💡 ${q.commentary}</div>
+        <button class="q-reset" onclick="resetQ('${pid}','${qi}')">↺ 다시풀기</button>
+      </div>
+    `;
+  }).join('');
+
+  // 5. 서술형
+  const ssHTML = p.seosulyeong.map(s => `
+    <div class="q-block">
+      <span class="q-type-badge badge-서술형">서술형 ${s.num}</span>
+      <div class="q-stem">${s.stem}</div>
+      ${s.passage ? `<div class="q-passage-box">${s.passage}</div>` : ''}
+      <div class="cond-box"><span>【조건】</span>${s.cond}</div>
+      <div class="answer-lines">${Array(s.lines).fill('<span class="answer-line"></span>').join('')}</div>
+    </div>
+  `).join('');
+
+  // 6. 정답지
+  const ansHTML = p.questions.map((q, qi) => `
+    <div class="ans-block">
+      <div class="ans-q-label">${qi+1}번 (${q.type})</div>
+      <span class="ans-correct">${['①','②','③','④','⑤'][q.answer]}</span>
+      <div class="ans-commentary">${q.commentary}</div>
+    </div>
+  `).join('') + `<hr style="border:none;border-top:1px solid var(--gray2);margin:20px 0;">` +
+  p.seosulyeong.map(s => `
+    <div class="ans-block">
+      <div class="ans-q-label">서술형 ${s.num}</div>
+      <div class="ans-model">✅ ${s.answer}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="passage-view" id="pv-${pid}">
+      <div class="p-header">
+        <div class="p-num">PASSAGE ${p.id}</div>
+        <div class="p-title">${p.title}</div>
+      </div>
+      <div class="sec-tabs" id="tabs-${pid}">
+        <button class="sec-tab active" onclick="showTab('${pid}',0,this)">① 문장분석</button>
+        <button class="sec-tab" onclick="showTab('${pid}',1,this)">② 문법총정리</button>
+        <button class="sec-tab" onclick="showTab('${pid}',2,this)">③ 전문해석</button>
+        <button class="sec-tab" onclick="showTab('${pid}',3,this)">④ 주제·구조</button>
+        <button class="sec-tab" onclick="showTab('${pid}',4,this)">⑤ 변형문제</button>
+        <button class="sec-tab" onclick="showTab('${pid}',5,this)">⑥ 서술형</button>
+        <button class="sec-tab" onclick="showTab('${pid}',6,this)">⑦ 정답지</button>
+      </div>
+
+      <div class="sec-panel active" id="tab-${pid}-0">
+        <div class="card">
+          <div class="card-title">원문</div>
+          <div class="passage-box">${fullText}</div>
+        </div>
+        <div class="card">
+          <div class="card-title">문장분석</div>
+          ${sentHTML}
+        </div>
+      </div>
+
+      <div class="sec-panel" id="tab-${pid}-1">
+        <div class="card">
+          <div class="card-title">문법총정리</div>
+          ${gramHTML}
+        </div>
+      </div>
+
+      <div class="sec-panel" id="tab-${pid}-2">
+        <div class="card">
+          <div class="card-title">전문해석</div>
+          <div class="trans-text">${p.translation}</div>
+        </div>
+      </div>
+
+      <div class="sec-panel" id="tab-${pid}-3">
+        <div class="card">
+          <div class="card-title">주제·요지·구조</div>
+          <div class="struct-row"><span class="struct-label">주제</span><span class="struct-val">${p.topic}</span></div>
+          <div class="struct-row"><span class="struct-label">요지</span><span class="struct-val">${p.main_idea}</span></div>
+          <div class="struct-row"><span class="struct-label">구조</span><span class="struct-val">${p.structure}</span></div>
+        </div>
+      </div>
+
+      <div class="sec-panel" id="tab-${pid}-4">
+        <div class="card">
+          <div class="card-title">변형문제</div>
+          ${qHTML}
+        </div>
+      </div>
+
+      <div class="sec-panel" id="tab-${pid}-5">
+        <div class="card">
+          <div class="card-title">서술형</div>
+          ${ssHTML}
+        </div>
+      </div>
+
+      <div class="sec-panel" id="tab-${pid}-6">
+        <div class="card">
+          <div class="card-title">정답지</div>
+          ${ansHTML}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══ NAVIGATION ══════════════════════════════════════════════
+
+function showPassage(pid) {
+  document.querySelectorAll('.passage-view').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.pnav-btn').forEach(el => el.classList.remove('active'));
+  const pv = document.getElementById('pv-' + pid);
+  if (pv) pv.classList.add('active');
+  const btn = document.getElementById('pnav-' + pid);
+  if (btn) {
+    btn.classList.add('active');
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+  }
+}
+
+function showTab(pid, idx, btn) {
+  for (let i = 0; i < 7; i++) {
+    const el = document.getElementById('tab-' + pid + '-' + i);
+    if (el) el.classList.remove('active');
+  }
+  const target = document.getElementById('tab-' + pid + '-' + idx);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('#tabs-' + pid + ' .sec-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+// ═══ QUIZ ════════════════════════════════════════════════════
+
+const answered = {};
+
+function checkAnswer(pid, qi, selected, correct) {
+  const key = pid + '-' + qi;
+  if (answered[key]) return;
+  answered[key] = true;
+
+  const block = document.getElementById('qblock-' + pid + '-' + qi);
+  const opts = block.querySelectorAll('.q-option');
+  opts.forEach((opt, i) => {
+    opt.style.pointerEvents = 'none';
+    if (i === correct) opt.classList.add('correct');
+    else if (i === selected) opt.classList.add('wrong');
+  });
+  const com = document.getElementById('qcom-' + pid + '-' + qi);
+  if (com) com.classList.add('show');
+}
+
+function resetQ(pid, qi) {
+  const key = pid + '-' + qi;
+  delete answered[key];
+  const block = document.getElementById('qblock-' + pid + '-' + qi);
+  const opts = block.querySelectorAll('.q-option');
+  opts.forEach(opt => {
+    opt.classList.remove('correct', 'wrong');
+    opt.style.pointerEvents = '';
+  });
+  const com = document.getElementById('qcom-' + pid + '-' + qi);
+  if (com) com.classList.remove('show');
+}
+
+// ═══ INIT ════════════════════════════════════════════════════
+
+window.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('passageNav');
+  const main = document.getElementById('mainContent');
+
+  PASSAGES.forEach((p, i) => {
+    const pid = p.id.replace('-','');
+    const btn = document.createElement('button');
+    btn.className = 'pnav-btn' + (i === 0 ? ' active' : '');
+    btn.id = 'pnav-' + pid;
+    btn.textContent = p.id + ' · ' + p.title;
+    btn.onclick = () => showPassage(pid);
+    nav.appendChild(btn);
+    main.innerHTML += buildPassageHTML(p);
+  });
+
+  // Show first passage
+  const firstPid = PASSAGES[0].id.replace('-','');
+  showPassage(firstPid);
+});
+</script>
+</body>
+</html>
